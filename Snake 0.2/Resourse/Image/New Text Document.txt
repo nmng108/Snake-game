@@ -1,0 +1,10 @@
+go to the funtion Move():
+	
+    if(head->right)
+	old pos = head;
+	head .x++;
+	if(old direction = left)  now direction = right, bend = (0;18)
+	
+
+	if(old direction = up) set bend cell & head.y, 
+			
