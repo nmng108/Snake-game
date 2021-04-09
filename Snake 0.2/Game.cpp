@@ -6,8 +6,8 @@ Game::Game()
     MAP.create_Map();   // đem vào hàm khởi tạo?
     MAP.ground_Texture=loadTexture("Resourse/Image/grass.png", renderer);
     MAP.wall_Texture=loadTexture("Resourse/Image/block.jpg", renderer);
-    MAP.fruit_Texture=loadTexture("Resourse/Image/bnna.png", renderer);
-        SNAKE.draw(renderer);
+    MAP.fruit_Texture=loadTexture("Resourse/Image/snake2/apple-removebg.png", renderer);
+    SNAKE.draw(renderer);
 
 }
 Game::~Game()
@@ -16,17 +16,17 @@ Game::~Game()
 }
 void Game::loop()
 {
-    MAP.getFruit(); //dua vao create map
     while(ingame) {
 //        int start_time=SDL_GetTicks();
 //        MAP.create_Map();   // đem vào hàm khởi tạo?
         input();
-        update();
         draw();
+        update();
         render();
 //        int time_loop=SDL_GetTicks() - start_time;
 //        if(time_loop<1000/75) SDL_Delay(1000/75-time_loop);
-        SDL_Delay(300);
+        input();
+        SDL_Delay(200);
     }
 }
 
@@ -52,26 +52,32 @@ void Game::input()
 }
 void Game::update()
 {
-    if(SNAKE.eatFruit(MAP.fruit)) {
+    if(SNAKE.eatFruit(MAP.fruit) || start == true) {
         MAP.getFruit();
         cout<<++SNAKE.score<<endl;
+        start = false;
     }
+    SNAKE.Move();
     if(SNAKE.CRASH(MAP.base_Array)) {
         ingame = false;
+        endgame_signal = 1;
         cout<<"end";
-//        waitUntilKeyPressed();
-    } //use ! in cond area
-    SNAKE.Move(WIDTH_SCREEN, HEIGHT_SCREEN);
+    }
 }
 void Game::draw()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
+    MAP.base_Array[SNAKE.body[0].y][SNAKE.body[0].x] = SnakeHEAD;
+    for(int i=0;i<SNAKE.body.size();i++) MAP.base_Array[SNAKE.body[i].y][SNAKE.body[i].x] = Snake;
+
 }
 void Game::render()
 {
-    renderTexture(MAP.ground_Texture, renderer, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-100);
+    if(endgame_signal) return;
+
+//    renderTexture(MAP.ground_Texture, renderer, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-100);
     for(int i=0;i<MAP.base_Array.size();i++){
         for(int j=0;j<MAP.base_Array[0].size();j++) {
 //            SDL_Rect dest;
@@ -81,5 +87,7 @@ void Game::render()
         }
     }
     SNAKE.render(renderer);
+
+    MAP.display_score(SNAKE.score, renderer);
     SDL_RenderPresent(renderer);
 }

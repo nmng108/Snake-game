@@ -2,146 +2,118 @@
                         /**  class snake  */
 bool snake::eatFruit(SDL_Point fruit)
 {
-    fruit.x*=CELL_side;
-    fruit.y*=CELL_side;
-
     if(DIRECTION==Freeze) return false;
 
-    else if(((HEAD.x+CELL_side)>fruit.x && HEAD.x<=fruit.x && HEAD.y==fruit.y)|| //right
-       (HEAD.x<(fruit.x+CELL_side) && HEAD.x>=fruit.x && HEAD.y==fruit.y && DIRECTION==Left)|| //left
-       ((HEAD.y+CELL_side)>fruit.y && HEAD.y<=fruit.y && HEAD.x==fruit.x && DIRECTION==Down)|| //down
-       (HEAD.y<(fruit.y+CELL_side) && HEAD.y>=fruit.y && HEAD.x==fruit.x && DIRECTION==Up)  ) {//up
+//    else if(((body[0].x+CELL_side)>fruit.x && body[0].x<=fruit.x && body[0].y==fruit.y)|| //right
+//       (body[0].x<(fruit.x+CELL_side) && body[0].x>=fruit.x && body[0].y==fruit.y && DIRECTION==Left)|| //left
+//       ((body[0].y+CELL_side)>fruit.y && body[0].y<=fruit.y && body[0].x==fruit.x && DIRECTION==Down)|| //down
+//       (body[0].y<(fruit.y+CELL_side) && body[0].y>=fruit.y && body[0].x==fruit.x && DIRECTION==Up)  ) {//up
 
-        body_snake++;
-        body.resize(body_snake);
+//        body_snake++;
+//        body.resize(body_snake);
+//        return true;
+//    }
+    if(body[0].x==fruit.x && body[0].y==fruit.y) {
+        segments++;
         return true;
     }
     return false;
 }
-void snake::Move(int WIDTH, int HEIGHT)
+void snake::Move()
 {
-    SDL_Point old_pos=HEAD;
-    bool change=1;
+    POS_n_DIR prev_pos={body[0].x, body[0].y};
+//    bool change=1;  //for locating where we put snake's turning segments
 
     if(DIRECTION==Left && old_DIRECTION==Freeze) DIRECTION=Freeze;
 
     if(DIRECTION==Freeze) return;
 
-    body[0] = {HEAD.x-CELL_side, HEAD.y};
     while(true) {
         if(DIRECTION==Up && old_DIRECTION!=Down) {
-            bend_CELL.y = HEAD.y;
-            HEAD.y = ( HEAD.y - velocity +(HEIGHT-100) )%(HEIGHT-100);
+            body[0].angle=180;
+            body[0].y = ( body[0].y - velocity + array_ROW ) % array_ROW;
 
             if(old_DIRECTION==Right) {
-//                int present_CELL_x=int(HEAD.x/CELL_side);
-                int present_pos_x = int(HEAD.x/CELL_side) * CELL_side;
-
-                if(CELL_side*0.2 >= (HEAD.x%CELL_side) ) bend_CELL.x = HEAD.x = present_pos_x;
-                else bend_CELL.x = HEAD.x = present_pos_x + CELL_side;
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 90;
             }
-            if(old_DIRECTION==Left) {
-                int present_CELL_x, present_pos_x;
-                if( HEAD.x%CELL_side==0 ) {
-//                    present_CELL_x = int(HEAD.x/CELL_side);
-                    present_pos_x = int(HEAD.x/CELL_side)*CELL_side;
-                }
-                else {
-//                    present_CELL_x = HEAD.x/CELL_side + 1;
-                    present_pos_x = int(HEAD.x/CELL_side+1)*CELL_side;
-                }
-
-                if( HEAD.x >= present_pos_x - 0.2*CELL_side ) bend_CELL.x = HEAD.x = present_pos_x;
-                else bend_CELL.x = HEAD.x = present_pos_x - CELL_side;
+            else if(old_DIRECTION==Left) {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 180;
+            }
+            else {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = false;
             }
             break;
         }
         else if(DIRECTION==Down && old_DIRECTION!=Up) {
-            bend_CELL.y = HEAD.y;
-            HEAD.y = (HEAD.y + velocity)%(HEIGHT-100);
+            body[0].angle=0;
+            body[0].y = (body[0].y + velocity)%(array_ROW);
 
             if(old_DIRECTION == Left) {
-                int present_CELL_x, present_pos_x;
-                if( HEAD.x%CELL_side==0 ) {
-//                    present_CELL_x = HEAD.x/CELL_side;
-                    present_pos_x = int(HEAD.x/CELL_side)*CELL_side;
-                }
-                else {
-//                    present_CELL_x = HEAD.x/CELL_side + 1;
-                    present_pos_x = int(HEAD.x/CELL_side+1)*CELL_side;
-                }
-
-                if( HEAD.x >= present_pos_x - 0.2*CELL_side ) bend_CELL.x = HEAD.x = present_pos_x;
-                else bend_CELL.x = HEAD.x = present_pos_x - CELL_side;
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 270;
             }
-            if(old_DIRECTION == Right) {
-//                int present_CELL_x=HEAD.x/CELL_side;
-                int present_pos_x = int(HEAD.x/CELL_side) * CELL_side;
-
-                if(CELL_side*0.2 >= (HEAD.x%CELL_side) ) bend_CELL.x = HEAD.x = present_pos_x;
-                else bend_CELL.x = HEAD.x = present_pos_x + CELL_side;
+            else if(old_DIRECTION == Right) {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 0;
+            }
+            else {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = false;
             }
             break;
         }
-        else if(DIRECTION==Right && old_DIRECTION!=Left) {
-            HEAD.x = (HEAD.x + velocity)%WIDTH;
+        else if(DIRECTION==Right && old_DIRECTION != Left) {
+            body[0].angle= -90;
+            body[0].x = (body[0].x + velocity) %array_COL;
 
             if(old_DIRECTION == Down) {
-//                int present_CELL_y = HEAD.y/CELL_side;
-                int present_pos_y = int(HEAD.y/CELL_side) * CELL_side;
-
-                if(CELL_side*0.2 >= (HEAD.y%CELL_side) ) bend_CELL.y = HEAD.y = present_pos_y;
-                else bend_CELL.y = HEAD.y = present_pos_y + CELL_side;
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 180;
             }
-            if(old_DIRECTION == Up) {
-                int present_CELL_y, present_pos_y;
-                if( HEAD.y%CELL_side==0 ) {
-//                    present_CELL_y = HEAD.y/CELL_side;
-                    present_pos_y = int(HEAD.y/CELL_side)*CELL_side;
-                }
-                else {
-//                    present_CELL_y = HEAD.y/CELL_side + 1;
-                    present_pos_y = int(HEAD.y/CELL_side+1)*CELL_side;
-                }
-
-                if( HEAD.y >= present_pos_y - 0.2*CELL_side ) bend_CELL.y = HEAD.y = present_pos_y;
-                else bend_CELL.y = HEAD.y = present_pos_y - CELL_side;
+            else if(old_DIRECTION == Up) {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 270;
+            }
+            else {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = false;
             }
             break;
         }
         else if(DIRECTION==Left && old_DIRECTION!=Right) {
-            HEAD.x = (HEAD.x - velocity + WIDTH) % WIDTH;
+            body[0].angle= 90;
+            body[0].x = (body[0].x - velocity + array_COL) % array_COL;
 
             if(old_DIRECTION == Down) {
-//                int present_CELL_y = HEAD.y/CELL_side;
-                int present_pos_y = int(HEAD.y/CELL_side) * CELL_side;
-
-                if(CELL_side*0.2 >= (HEAD.y%CELL_side) ) bend_CELL.y = HEAD.y = present_pos_y;
-                else bend_CELL.y = HEAD.y = present_pos_y + CELL_side;
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 90;
             }
-            if(old_DIRECTION == Up) {
-                int present_CELL_y, present_pos_y;
-                if( HEAD.y%CELL_side==0 ) {
-//                    present_CELL_y = HEAD.y/CELL_side;
-                    present_pos_y = int(HEAD.y/CELL_side)*CELL_side;
-                }
-                else {
-//                    present_CELL_y = HEAD.y/CELL_side + 1;
-                    present_pos_y = int(HEAD.y/CELL_side+1)*CELL_side;
-                }
-
-                if( HEAD.y >= present_pos_y - 0.2*CELL_side ) bend_CELL.y = HEAD.y = present_pos_y;
-                else bend_CELL.y = HEAD.y = present_pos_y - CELL_side;
+            else if(old_DIRECTION == Up) {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = true;
+                prev_pos.angle = 0;
+            }
+            else {
+                prev_pos.direction = DIRECTION;
+                prev_pos.turning = false;
             }
             break;
         }
-        else if(DIRECTION==Freeze) {break;}
-        else {DIRECTION = old_DIRECTION; change = false;}
+        else { DIRECTION = old_DIRECTION; }
     }
 
-    if(!change) bend_CELL={12,0};
+//    if(!change) bend_CELL={12,0}; //put in the cell which is out of the board
 
-    if(DIRECTION!=Freeze) {
 //        for(int i=0;i<body_snake;i++) {
 //            SDL_Point tmp_point = body[i];
 //
@@ -153,66 +125,77 @@ void snake::Move(int WIDTH, int HEIGHT)
 //            old_pos = tmp_point;
 //        }
 
-        for(int i=0;i<body.size();i++) {
-            SDL_Point tmp_point = body[i];
-            body [i] = old_pos;
-            old_pos = tmp_point;
-        }
+    body.resize(segments);
+
+
+    for(int i=1;i<body.size();i++) {
+        POS_n_DIR tmp_point = body[i];
+        body [i] = prev_pos;
+        prev_pos = tmp_point;
     }
 
-    old_DIRECTION=DIRECTION; // đưa xuống hàm render để xử lí ảnh trước
+    old_DIRECTION=DIRECTION;
 }
 
 bool snake::CRASH(vector<vector<int>> Map)
 {
-    if(HEAD.y%CELL_side!=0) {
-        if(DIRECTION==Up) {
-            if(Map[int(HEAD.y/CELL_side)][HEAD.x]==Wall) {DIRECTION =Freeze; return 1;}
+    if(Map[body[0].y][body[0].x] == Wall) return 1;
 
-//            vector<SDL_Point> BODYcoordinates_inMap;
-            for(int i=0;i<body_snake;i++)
-//                BODYcoordinates_inMap.push_back({int(body[i].y/CELL_side), int(body[i].x/CELL_side)});
-                if(int(body[i].y/CELL_side)==int(HEAD.y/CELL_side) && abs(HEAD.x-body[i].x)<CELL_side) {DIRECTION =Freeze; return 1;}
-        }
-        if(DIRECTION==Down) {
-            if(Map[int(HEAD.y/CELL_side)+1][HEAD.x]==Wall) {DIRECTION =Freeze; return 1;}
-
-            for(int i=0;i<body_snake;i++)
-                if(body[i].y<(HEAD.y+CELL_side) && int(body[i].x/CELL_side)==HEAD.x/CELL_side) {DIRECTION =Freeze; return 1;}
-        }
-    }
-    if(HEAD.x%CELL_side != 0) {
-        if(DIRECTION==Left) {
-            if(Map[HEAD.y][int(HEAD.x/CELL_side)]==Wall) {DIRECTION =Freeze; return 1;}
-
-            for(int i=0;i<body.size();i++)
-                if( int(body[i].y/CELL_side)==HEAD.y/CELL_side && (body[i].x+CELL_side)<HEAD.x) {DIRECTION =Freeze; return 1;}
-        }
-        if(DIRECTION==Right) {
-            if(Map[HEAD.y][int(HEAD.x/CELL_side)+1]==Wall) {DIRECTION =Freeze; return 1;}
-
-            for(int i=0;i<body.size();i++)
-                if( abs(body[i].y-HEAD.y)<CELL_side && body[i].x<(HEAD.x+CELL_side) ) {DIRECTION =Freeze; return 1;}
-        }
+    for(int i=1;i<body.size();i++) {
+        if(body[0].x==body[i].x && body[0].y==body[i].y) return 1;
     }
     return 0;
 }
 
                         /**  class entity  */
+void entity::rotate_body()
+{
+    for(int i=1;i<body.size()-1 && body[i].turning != true;i++) { //for all
+        if(body[i].direction==Right) body[i].angle=90;
+        if(body[i].direction==Left) body[i].angle=270;
+        if(body[i].direction==Up) body[i].angle=0;
+        if(body[i].direction==Down) body[i].angle=180;
+
+    }
+//tail:
+//    if(body[body.size()-1].turning == true) {
+        switch (body[body.size()-1].direction)
+        {
+            case Down: body[body.size()-1].angle = 180; break;
+            case Up: body[body.size()-1].angle = 0; break;
+            case Left: body[body.size()-1].angle = 270; break;
+            case Right: body[body.size()-1].angle = 90; break;
+        }
+//    }
+//    else {
+//        switch (body[body.size()-1].direction)
+//        {
+//            case Down: body[body.size()-1].angle = 180; break;
+//            case Up: body[body.size()-1].angle = 0; break;
+//            case Left: body[body.size()-1].angle = 270; break;
+//            case Right: body[body.size()-1].angle = 90; break;
+//        }
+//    }
+}
+
 void entity::render(SDL_Renderer *ren)
 {
-    renderTexture(img_HEAD[(tmp_index++)%3], ren, HEAD.x, HEAD.y, CELL_side, CELL_side);
+    rotate_body();
 
-    for(int i=0;i<body.size();i++) {
-        if(i==body.size()-1) renderTexture(img_tail, ren, body[i].x, body[i].y, CELL_side, CELL_side);
+    renderTexture(img_HEAD[(tmp_index++)%3], ren, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
 
-        else if(body[i].x==bend_CELL.x && body[i].y==bend_CELL.y) renderTexture(img_bendCELL, ren, body[i].x, body[i].y, CELL_side, CELL_side);
+    for(int i=1;i<body.size();i++) {
 
-        else renderTexture(img_BODY, ren, body[i].x, body[i].y, CELL_side, CELL_side);
+        if(i==body.size()-1) renderTexture(img_tail, ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+
+        else if(body[i].turning==true) renderTexture(img_bend , ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+
+        else renderTexture(img_BODY, ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
     }
 }
 entity::entity()
 {
-    body.resize(1);
-    body[0]={9*CELL_side-1, 6*CELL_side};
+    body.resize(2);
+    body[0] = {9, 6, Right, -90, false};
+    body[1]={9-1, 6, Right, 90, false};
 }

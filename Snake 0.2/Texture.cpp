@@ -35,7 +35,7 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
 	SDL_RenderCopy(ren, tex, NULL, &dst);
 }
 
-void renderText(const string &msg, SDL_Color &color, SDL_Renderer *ren, int x, int y)
+void renderText(const string &msg, SDL_Color color, SDL_Renderer *ren, int x, int y)
 {
     TTF_Font *font = TTF_OpenFont("SDL folder/Amatic-Bold.ttf", 60);
     SDL_Surface *suf= TTF_RenderText_Solid(font, msg.c_str(), color);
@@ -48,4 +48,15 @@ void renderText(const string &msg, SDL_Color &color, SDL_Renderer *ren, int x, i
     rect.y = y;
     SDL_FreeSurface(suf);
     SDL_RenderCopy(ren, tex, NULL, &rect);
+}
+
+void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h, int angle)
+{
+	SDL_Rect dest;
+	dest.x = x;
+	dest.y = y;
+    dest.w = w;
+    dest.h = h;
+
+	SDL_RenderCopyEx(ren, tex, NULL, &dest, angle, nullptr, SDL_FLIP_NONE);
 }

@@ -66,7 +66,11 @@ void snake::getLonger()
 
 bool snake::CRASH() {
     for(int i=0;i<body.size();i++){
-        if( (HEAD.x==body[i].x && HEAD.y==body[i].y) ) {cout<<"happened"<<endl; DIRECTION =Freeze; return 1;}
+        if( (HEAD.x==body[i].x && HEAD.y==body[i].y) ) {
+            cout<<"lose"<<endl;
+            DIRECTION =Freeze;
+            return 1;
+        }
     }
     return 0;
 }

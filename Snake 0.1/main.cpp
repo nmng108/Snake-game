@@ -4,7 +4,6 @@
 #include <string>
 #include <SDL.h>
 #include "SDL_utils.h"
-#include "event_Handle.h"
 #include "game_Object.h"
 
 using namespace std;
@@ -29,7 +28,7 @@ Direction old_DIRECTION=Freeze;
 
 int main(int argc, char* argv[])
 {
-    const int time_per_frame=1000/60;
+//    const int time_per_frame=1000/60;
     initSDL(window, renderer, SCREEN_WIDTH, SCREEN_HEIGHT, WIN_TITLE.c_str() );
 
 
@@ -44,22 +43,21 @@ int main(int argc, char* argv[])
 
     int count=0;
         while(in_game) {
-            int start_time=SDL_GetTicks();
+//            int start_time=SDL_GetTicks();
 
             SDL_SetRenderDrawColor(renderer, 0, 0, 0,255);
             SDL_RenderClear(renderer);
 
             MAP.create_Map();
-//            while(SDL_PollEvent(&event)) {
-//                if(event.type == SDL_QUIT) {
-//                    in_game = 0; running = 0;
-//                    break;
-//                }
-//                SNAKE->event_handle(event, in_game, running);
-//
-//            }
-            Event_Handle(in_game, running, *SNAKE);
-            if(SNAKE->CRASH()) {cin>>running; break; }
+            while(SDL_PollEvent(&event)) {
+                if(event.type == SDL_QUIT) {
+                    in_game = 0; running = 0;
+                    break;
+                }
+                SNAKE->event_handle(event, in_game, running);
+
+            }
+            if(SNAKE->CRASH()) { break; }
 
             if( SNAKE->eatFruit(MAP.fruit) ) {
                 SNAKE->getLonger();
@@ -67,14 +65,13 @@ int main(int argc, char* argv[])
                 cout<<++count<<endl;
             }
             SNAKE->Move(old_DIRECTION, Column_Board, Row_Board);
-    //        SNAKE->update_in_array();
             vector<vector<object>> update_Map = MAP.show_in_2Darray(*SNAKE);
 
             render_with_2Darray(update_Map, side_of_aUnit, renderer);
             SDL_RenderPresent(renderer);
 
-            int mainloop_time = SDL_GetTicks() - start_time;  //mainloop_time is considered as time per frame  time_per_frame - mainloop_time
-            if(mainloop_time < time_per_frame) ;
+//            int mainloop_time = SDL_GetTicks() - start_time;  //mainloop_time is considered as time per frame  time_per_frame - mainloop_time
+//            if(mainloop_time < time_per_frame) ;
             SDL_Delay(115);
         }
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <ctime>
 #include <fstream>
+#include <sstream>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -15,6 +16,8 @@
 #define HEIGHT_SCREEN 700
 using namespace std;
 const int CELL_side=50;
+    const int array_COL = WIDTH_SCREEN/CELL_side;
+    const int array_ROW =(HEIGHT_SCREEN-100)/CELL_side;
 
 enum Direction
 {
@@ -22,7 +25,8 @@ enum Direction
     Up,
     Down,
     Left,
-    Right
+    Right,
+    Turn
 };
 enum object
 {

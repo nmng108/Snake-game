@@ -7,7 +7,7 @@
 using namespace std;
 
 class Game {
-    string WINDOW_TITLE = "Classic Snake - with cpp & SDL2 by NHN";
+    string WINDOW_TITLE = "Classic Snake -  by Nguyen Hai Nam";
     SDL_Window *window;
     SDL_Renderer *renderer;
 
@@ -15,6 +15,9 @@ class Game {
     entity SNAKE;
     bool ingame = 1, running = 1;
     SDL_Event event;
+
+    bool endgame_signal=0;
+    bool start=1;
 public:
     Game();
     ~Game();
