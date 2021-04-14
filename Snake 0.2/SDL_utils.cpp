@@ -1,7 +1,7 @@
 #include "SDL_utils.h"
 
 //*****************************************************
-// Các hàm chung về khởi tạo và huỷ SDL
+// The common function for initializing, using and closing a console that using SDL2
 
 void logSDLError(ostream& os,
                  const string &msg, bool fatal)

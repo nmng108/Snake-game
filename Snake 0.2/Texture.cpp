@@ -48,6 +48,7 @@ void renderText(const string &msg, SDL_Color color, SDL_Renderer *ren, int x, in
     rect.y = y;
     SDL_FreeSurface(suf);
     SDL_RenderCopy(ren, tex, NULL, &rect);
+    SDL_DestroyTexture(tex);
 }
 
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h, int angle)

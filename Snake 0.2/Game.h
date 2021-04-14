@@ -11,20 +11,20 @@ class Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
 
-    Map MAP;
-    entity SNAKE;
+    entity *SNAKE = new entity;
+    Map *MAP = new Map;
     bool ingame = 1, running = 1;
     SDL_Event event;
 
     bool endgame_signal=0;
-    bool start=1;
+//    bool start=1;
 public:
     Game();
     ~Game();
     void loop();
     void update();
-    void render();
     void draw();
+    void render();
     void input();
 };
 

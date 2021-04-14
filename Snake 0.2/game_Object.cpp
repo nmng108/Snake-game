@@ -144,6 +144,8 @@ bool snake::CRASH(vector<vector<int>> Map)
     for(int i=1;i<body.size();i++) {
         if(body[0].x==body[i].x && body[0].y==body[i].y) return 1;
     }
+//    if(Map[body[0].y][body[0].x]==Wall || Map[body[0].y][body[0].x]==Snake) return 1;
+
     return 0;
 }
 

@@ -432,10 +432,10 @@
 1616550328 source:e:\hoctap\newgame\texture.cpp
 	"Texture.h"
 
-1617984126 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
+1618047361 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
 	"game_Object.h"
 
-1617986608 e:\hoctap\newgame\snake 0.2\game_object.h
+1618290567 e:\hoctap\newgame\snake 0.2\game_object.h
 	"SDL_utils.h"
 	"Texture.h"
 
@@ -834,27 +834,28 @@
 1617814105 e:\hoctap\newgame\snake 0.2\texture.h
 	"SDL_utils.h"
 
-1616924186 source:e:\hoctap\newgame\snake 0.2\main.cpp
+1618291219 source:e:\hoctap\newgame\snake 0.2\main.cpp
 	"Game.h"
 
-1617986718 e:\hoctap\newgame\snake 0.2\game.h
+1618397686 e:\hoctap\newgame\snake 0.2\game.h
 	"game_Object.h"
 	"Map.h"
 	"Texture.h"
 
-1617986238 e:\hoctap\newgame\snake 0.2\map.h
+1618292779 e:\hoctap\newgame\snake 0.2\map.h
 	"SDL_utils.h"
 	"Texture.h"
+	"game_Object.h"
 
-1617986559 source:e:\hoctap\newgame\snake 0.2\map.cpp
+1618292534 source:e:\hoctap\newgame\snake 0.2\map.cpp
 	"Map.h"
 
-1616683452 source:e:\hoctap\newgame\snake 0.2\sdl_utils.cpp
+1618077858 source:e:\hoctap\newgame\snake 0.2\sdl_utils.cpp
 	"SDL_utils.h"
 
-1617814810 source:e:\hoctap\newgame\snake 0.2\texture.cpp
+1618078398 source:e:\hoctap\newgame\snake 0.2\texture.cpp
 	"Texture.h"
 
-1617986238 source:e:\hoctap\newgame\snake 0.2\game.cpp
+1618290096 source:e:\hoctap\newgame\snake 0.2\game.cpp
 	"Game.h"
 

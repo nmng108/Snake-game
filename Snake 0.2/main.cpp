@@ -2,8 +2,8 @@
 
 int main(int agrc, char* agrv[])
 {
-    Game *SNAKE = new Game;
-    SNAKE->loop();
-    delete SNAKE;
+    Game *SNAKE_game = new Game;
+    SNAKE_game->loop();
+    delete SNAKE_game;
     return 0;
 }

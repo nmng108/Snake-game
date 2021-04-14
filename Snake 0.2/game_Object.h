@@ -23,7 +23,7 @@ public:
     void Move();
     bool eatFruit(SDL_Point fruit); //get longer
     Direction DIRECTION = Freeze;
-    int score = -1;
+    int score = 0;
     bool CRASH(vector<vector<int>> Map); //return 1 if happening accident
 };
 
@@ -44,13 +44,17 @@ public:
         SDL_DestroyTexture (img_bend);
         SDL_DestroyTexture (img_BODY);
         SDL_DestroyTexture (img_tail);
+        img_BODY=nullptr,
+        img_tail=nullptr,
+        img_bend=nullptr;
+
     }
 
     void draw(SDL_Renderer *ren) {
         while(img_HEAD.size()!=3) {
             img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", ren));
-            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", ren));
-            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", ren));
+            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2a.png", ren));
+            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2aa.png", ren));
         }
         if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
             img_BODY = loadTexture("Resourse/Image/Snake2/body.png", ren);
