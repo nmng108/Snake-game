@@ -4,15 +4,6 @@ bool snake::eatFruit(SDL_Point fruit)
 {
     if(DIRECTION==Freeze) return false;
 
-//    else if(((body[0].x+CELL_side)>fruit.x && body[0].x<=fruit.x && body[0].y==fruit.y)|| //right
-//       (body[0].x<(fruit.x+CELL_side) && body[0].x>=fruit.x && body[0].y==fruit.y && DIRECTION==Left)|| //left
-//       ((body[0].y+CELL_side)>fruit.y && body[0].y<=fruit.y && body[0].x==fruit.x && DIRECTION==Down)|| //down
-//       (body[0].y<(fruit.y+CELL_side) && body[0].y>=fruit.y && body[0].x==fruit.x && DIRECTION==Up)  ) {//up
-
-//        body_snake++;
-//        body.resize(body_snake);
-//        return true;
-//    }
     if(body[0].x==fruit.x && body[0].y==fruit.y) {
         segments++;
         return true;

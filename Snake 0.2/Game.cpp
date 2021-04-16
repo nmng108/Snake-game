@@ -14,6 +14,9 @@ Game::~Game()
 }
 void Game::loop()
 {
+//    MENU->render();
+//    MENU->input();
+
     while(ingame) {
         int start_time=SDL_GetTicks();
 
@@ -29,6 +32,8 @@ void Game::loop()
 
 void Game::input()
 {
+    SDL_PumpEvents();
+
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
             ingame = 0;
