@@ -3,6 +3,7 @@
 Game::Game()
 {
     initSDL(window, renderer, WIDTH_SCREEN, HEIGHT_SCREEN, WINDOW_TITLE.c_str());
+    stMenu.draw(renderer);
     MAP->draw(renderer);
     SNAKE->draw(renderer);
 }
@@ -14,17 +15,26 @@ Game::~Game()
 }
 void Game::loop()
 {
-    while(ingame) {
-        int start_time=SDL_GetTicks();
+    while(running) {
+    //        stMenu.loop(renderer, ingame);
+        run_first_Menu();
 
-        input();
-        draw();
-        update();
-        render();
+        while(ingame) {
+            int start_time=SDL_GetTicks();
 
-        int time_loop=SDL_GetTicks() - start_time;
-        if(time_loop<175) SDL_Delay(175-time_loop);
+            input();
+            draw();
+            update();
+            render();
+
+            int time_loop=SDL_GetTicks() - start_time;
+            if(time_loop<175) SDL_Delay(175-time_loop);
+        }
+
     }
+    stMenu.free();
+    MAP->free();
+    SNAKE->free();
 }
 
 void Game::input()
@@ -94,4 +104,11 @@ void Game::render()
 
     MAP->display_score(SNAKE->score, renderer);
     SDL_RenderPresent(renderer);
+}
+
+void Game::run_first_Menu()
+{
+    stMenu.render(renderer);
+    stMenu.input(running);
+    stMenu.handle_input(running, ingame);
 }

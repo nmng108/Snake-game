@@ -6,9 +6,9 @@ Map::Map()
 }
 Map::~Map()
 {
-    SDL_DestroyTexture(ground_Texture);
-    SDL_DestroyTexture(fruit_Texture);
-    SDL_DestroyTexture(wall_Texture);
+//    SDL_DestroyTexture(ground_Texture);
+//    SDL_DestroyTexture(fruit_Texture);
+//    SDL_DestroyTexture(wall_Texture);
 }
 void Map::create_Map()
 {

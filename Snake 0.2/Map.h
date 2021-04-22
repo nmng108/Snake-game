@@ -30,6 +30,15 @@ public:
 
     void display_score(int score, SDL_Renderer *renderer);
 
+    void free() {
+        SDL_DestroyTexture(ground_Texture);
+        SDL_DestroyTexture(fruit_Texture);
+        SDL_DestroyTexture(wall_Texture);
+        ground_Texture=nullptr,
+        fruit_Texture=nullptr,
+        wall_Texture=nullptr;
+    }
+
 //    vector<vector<object>> show_in_2Darray(snake SNAKE); //take fruit, snake::body+HEAD,
 };
 
