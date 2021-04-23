@@ -57,6 +57,8 @@ public:
     }
     void render(SDL_Renderer *ren);
 
+    void reset();
+
     void free() {
         for(int i=0;i<3;i++) SDL_DestroyTexture(img_HEAD[i]);
         SDL_DestroyTexture (img_bend);

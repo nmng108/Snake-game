@@ -52,12 +52,12 @@ void Map::getFruit() //có thể thêm tham số rắn
 
 void Map::display_score(int score, SDL_Renderer *ren)
 {
-//    stringstream save_score;
-//    save_score<<"Score: "<<score;
-//    string tmp;
-//    getline(save_score, tmp);
+    stringstream save_score;
+    save_score<<"Score: "<<score;
+    string tmp;
+    getline(save_score, tmp);
 
-    string tmp = "Score: " + to_string(score);
+//    string tmp = "Score: " + to_string(score);
 
     SDL_Color TEXT_color = {0, 204, 204, 255};
     renderText(tmp, TEXT_color, ren, 0, 620);

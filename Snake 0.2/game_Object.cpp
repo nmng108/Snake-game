@@ -186,9 +186,18 @@ void entity::render(SDL_Renderer *ren)
         else renderTexture(img_BODY, ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
     }
 }
-entity::entity()
+
+void entity::reset()
 {
     body.resize(2);
     body[0] = {9, 6, Right, -90, false};
     body[1] = {9-1, 6, Right, 90, false};
+}
+
+
+entity::entity()
+{
+    body.resize(2);
+    body[0] = {9, 6, Right, -90, false};
+    body[1]={9-1, 6, Right, 90, false};
 }

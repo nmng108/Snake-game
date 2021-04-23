@@ -3,7 +3,6 @@
 Game::Game()
 {
     initSDL(window, renderer, WIDTH_SCREEN, HEIGHT_SCREEN, WINDOW_TITLE.c_str());
-    stMenu.draw(renderer);
     MAP->draw(renderer);
     SNAKE->draw(renderer);
 }
@@ -15,30 +14,26 @@ Game::~Game()
 }
 void Game::loop()
 {
-    while(running) {
-    //        stMenu.loop(renderer, ingame);
-        run_first_Menu();
+//    MENU->render();
+//    MENU->input();
 
-        while(ingame) {
-            int start_time=SDL_GetTicks();
+    while(ingame) {
+        int start_time=SDL_GetTicks();
 
-            input();
-            draw();
-            update();
-            render();
+        input();
+        draw();
+        update();
+        render();
 
-            int time_loop=SDL_GetTicks() - start_time;
-            if(time_loop<175) SDL_Delay(175-time_loop);
-        }
-
+        int time_loop=SDL_GetTicks() - start_time;
+        if(time_loop<175) SDL_Delay(175-time_loop);
     }
-    stMenu.free();
-    MAP->free();
-    SNAKE->free();
 }
 
 void Game::input()
 {
+    SDL_PumpEvents();
+
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
             ingame = 0;
@@ -105,10 +100,26 @@ void Game::render()
     MAP->display_score(SNAKE->score, renderer);
     SDL_RenderPresent(renderer);
 }
-
 void Game::run_first_Menu()
 {
     stMenu.render(renderer);
     stMenu.input(running);
     stMenu.handle_input(running, ingame);
+}
+
+void Game::reset()
+{
+    SNAKE->reset();
+
+    bool sign=0;
+    do {
+        MAP->getFruit();
+        for(int i=0;i<SNAKE->body.size();i++) {
+            if(MAP->fruit.x==SNAKE->body[i].x && MAP->fruit.y==SNAKE->body[i].y) {
+                sign = 1;
+                break;
+            }
+        }
+    }
+    while (sign == true);
 }
