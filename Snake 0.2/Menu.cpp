@@ -19,7 +19,6 @@ void first_Menu::input(bool &running)
         if(event.type == SDL_MOUSEBUTTONUP){
             if(event.button.button == SDL_BUTTON_LEFT) {
                 MOUSE = Left_Up;
-                cout<<mouse.x<<' '<<mouse.y<<endl;
 
             }
         }
@@ -43,7 +42,7 @@ void first_Menu::handle_input(bool &running, bool &ingame)
 
             if(start_click_signal == 1) {
                 start_click_signal = 0;
-                ingame = 1;
+                ingame = 1; cout<<ingame<<endl;
                 cout<<mouse.x<<' '<<mouse.y<<endl;
             }
     }
@@ -120,7 +119,7 @@ void first_Menu::free()
 
 /** second Menu */
 
-//void first_Menu::input(bool &running)
+//void second_Menu::input(bool &running)
 //{
 //    SDL_GetMouseState(&mouse.x, &mouse.y);
 //    SDL_Event event;
@@ -145,7 +144,7 @@ void first_Menu::free()
 //    }
 //}
 //
-//void first_Menu::handle_input(bool &running, bool &ingame)
+//void second_Menu::handle_input(bool &running, bool &ingame)
 //{
 //    /**click in START button */
 //    if(MOUSE == Left_Down) {
@@ -189,7 +188,7 @@ void first_Menu::free()
 //    }
 //}
 //
-//void first_Menu::loop(SDL_Renderer *ren, bool &ingame)
+//void second_Menu::loop(SDL_Renderer *ren, bool &ingame)
 //{
 //    while(running) {
 //        render(ren);
@@ -199,7 +198,7 @@ void first_Menu::free()
 //    }
 //}
 //
-//void first_Menu::draw(SDL_Renderer *ren)
+//void second_Menu::draw(SDL_Renderer *ren)
 //{
 //    start_button = loadTexture("Resourse/Image/Menu/start_button.png", ren);
 //    SDL_QueryTexture(start_button, NULL, NULL, &start_size.x, &start_size.y);
@@ -215,7 +214,7 @@ void first_Menu::free()
 //
 //}
 //
-//void first_Menu::render(SDL_Renderer *ren)
+//void second_Menu::render(SDL_Renderer *ren)
 //{
 //    SDL_SetRenderDrawColor(ren, 0 ,0 ,0 , 255);
 //    SDL_RenderClear(ren);
@@ -226,7 +225,7 @@ void first_Menu::free()
 //
 //    SDL_RenderPresent(ren);
 //}
-//void first_Menu::free()
+//void second_Menu::free()
 //{
 //    SDL_DestroyTexture(start_button);
 //    SDL_DestroyTexture(guide_button);
@@ -235,5 +234,5 @@ void first_Menu::free()
 //    quit_button=nullptr;
 //    guide_button=nullptr;
 //
-//}
+//} asa
 

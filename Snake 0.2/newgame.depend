@@ -432,40 +432,28 @@
 1616550328 source:e:\hoctap\newgame\texture.cpp
 	"Texture.h"
 
-<<<<<<< Updated upstream
-1618078398 ated upstream
+1618078398 D
 
-1619090208 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
+1619088051 ated upstream
+
+1618047361 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
+	"game_Object.h"
 	"game_Object.h"
 
-1618895334 shed changes
-=======
-<<<<<<< Updated upstream
-1618410400 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
-=======
-1618078398 ated upstream
-
-1619095887 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
-	"game_Object.h"
-
-1618895334 shed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-	"game_Object.h"
-	"Map.h"
-	"Game.h"
-
-<<<<<<< Updated upstream
-1619090208 e:\hoctap\newgame\snake 0.2\game_object.h
-=======
-<<<<<<< Updated upstream
-1618290567 e:\hoctap\newgame\snake 0.2\game_object.h
-=======
-1619095890 e:\hoctap\newgame\snake 0.2\game_object.h
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+1619088051 shed changes
 	"SDL_utils.h"
 	"Texture.h"
+
+1618290096 ent of eb61706 (update 2)
+	"game_Object.h"
+	"SDL_utils.h"
+	"Texture.h"
+	"game_Object.h"
+	"Map.h"
+	"Texture.h"
+	"Map.h"
+
+1618290567 e:\hoctap\newgame\snake 0.2\game_object.h
 
 1617984465 e:\hoctap\newgame\snake 0.2\sdl_utils.h
 	<iostream>
@@ -865,35 +853,14 @@
 1618291219 source:e:\hoctap\newgame\snake 0.2\main.cpp
 	"Game.h"
 
-<<<<<<< Updated upstream
-1619090208 e:\hoctap\newgame\snake 0.2\game.h
-=======
-<<<<<<< Updated upstream
 1618397686 e:\hoctap\newgame\snake 0.2\game.h
-=======
-1619102159 e:\hoctap\newgame\snake 0.2\game.h
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-	"game_Object.h"
-	"Map.h"
-	"Texture.h"
-	"Menu.h"
 
-1619090208 e:\hoctap\newgame\snake 0.2\map.h
+1618292779 e:\hoctap\newgame\snake 0.2\map.h
 	"SDL_utils.h"
 	"Texture.h"
 	"game_Object.h"
 
-<<<<<<< Updated upstream
-1619090207 source:e:\hoctap\newgame\snake 0.2\map.cpp
-=======
-<<<<<<< Updated upstream
-1618471286 source:e:\hoctap\newgame\snake 0.2\map.cpp
-=======
-1619102158 source:e:\hoctap\newgame\snake 0.2\map.cpp
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-	"Map.h"
+1618292534 source:e:\hoctap\newgame\snake 0.2\map.cpp
 
 1618077858 source:e:\hoctap\newgame\snake 0.2\sdl_utils.cpp
 	"SDL_utils.h"
@@ -901,29 +868,449 @@
 1618078398 source:e:\hoctap\newgame\snake 0.2\texture.cpp
 	"Texture.h"
 
-<<<<<<< Updated upstream
-1619086502 source:e:\hoctap\newgame\snake 0.2\game.cpp
+1618290096 source:e:\hoctap\newgame\snake 0.2\game.cpp
 	"Game.h"
-
-1619088051 e:\hoctap\newgame\snake 0.2\menu.h
-=======
-<<<<<<< Updated upstream
-1618494703 source:e:\hoctap\newgame\snake 0.2\game.cpp
 	"Game.h"
-
-=======
-1619102206 source:e:\hoctap\newgame\snake 0.2\game.cpp
+	"Game.h"
 	"Game.h"
 
 1619102159 e:\hoctap\newgame\snake 0.2\menu.h
->>>>>>> Stashed changes
-	"SDL_utils.h"
-	"Texture.h"
 
 1619088051 source:e:\hoctap\newgame\snake 0.2\menu.cpp
 	"Menu.h"
 
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+1619196577 source:c:\users\admin\documents\github\snake-game\snake 0.2\main.cpp
+	"Game.h"
+
+1619206539 c:\users\admin\documents\github\snake-game\snake 0.2\game.h
+	"game_Object.h"
+	"Map.h"
+	"Texture.h"
+	"Menu.h"
+
+1619203241 c:\users\admin\documents\github\snake-game\snake 0.2\game_object.h
+	"SDL_utils.h"
+	"Texture.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl_utils.h
+	<iostream>
+	<string>
+	<cmath>
+	<vector>
+	<ctime>
+	<fstream>
+	<sstream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_metal.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"SDL_locale.h"
+	"SDL_misc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_config.h
+	"SDL_platform.h"
+	<sdkddkver.h>
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\begin_code.h
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\close_code.h
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<sys/cpuinline.h>
+	<mbarrier.h>
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<armintr.h>
+	<arm_neon.h>
+	<arm64intr.h>
+	<arm64_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_metal.h
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_locale.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\include\sdl2\sdl_misc.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\sdl2_image\include\sdl2\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\sdl folder\sdl2_ttf\include\sdl2\sdl_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1619196576 c:\users\admin\documents\github\snake-game\snake 0.2\texture.h
+	"SDL_utils.h"
+
+1619202844 c:\users\admin\documents\github\snake-game\snake 0.2\map.h
+	"SDL_utils.h"
+	"Texture.h"
+	"game_Object.h"
+
+1619206024 c:\users\admin\documents\github\snake-game\snake 0.2\menu.h
+	"SDL_utils.h"
+	"Texture.h"
+
+1619196576 source:c:\users\admin\documents\github\snake-game\snake 0.2\sdl_utils.cpp
+	"SDL_utils.h"
+
+1619196576 source:c:\users\admin\documents\github\snake-game\snake 0.2\texture.cpp
+	"Texture.h"
+
+1619206563 source:c:\users\admin\documents\github\snake-game\snake 0.2\game.cpp
+	"Game.h"
+
+1619206539 source:c:\users\admin\documents\github\snake-game\snake 0.2\game_object.cpp
+	"game_Object.h"
+
+1619202843 source:c:\users\admin\documents\github\snake-game\snake 0.2\map.cpp
+	"Map.h"
+
+1619207087 source:c:\users\admin\documents\github\snake-game\snake 0.2\menu.cpp
+	"Menu.h"
+

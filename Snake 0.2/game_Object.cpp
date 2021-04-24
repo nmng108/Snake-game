@@ -190,8 +190,9 @@ void entity::render(SDL_Renderer *ren)
 void entity::reset()
 {
     body.resize(2);
+    segments = 2;
     body[0] = {9, 6, Right, -90, false};
-    body[1] = {9-1, 6, Right, 90, false};
+    body[1]={9-1, 6, Right, 90, false};
 }
 
 

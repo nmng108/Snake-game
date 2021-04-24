@@ -17,7 +17,6 @@ protected:
         int angle;
         bool turning;
     };
-//    stringstream score, notice;
 public:
     vector <POS_n_DIR> body;
     void Move();
@@ -40,7 +39,6 @@ class entity : public snake
 public:
     entity();
     ~entity() {
-
     }
 
     void draw(SDL_Renderer *ren) {
