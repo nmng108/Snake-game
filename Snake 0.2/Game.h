@@ -12,14 +12,14 @@ class Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
 
-    first_Menu stMenu;
-    entity *SNAKE = new entity;
-    Map *MAP = new Map;
+    first_Menu* stMenu = nullptr;
+    entity *SNAKE = nullptr;
+    Map *MAP = nullptr;
     bool ingame = 0, running = 1;
     SDL_Event event;
 
     bool endgame_signal=0;
-//    bool start=1;
+
 public:
     Game();
     ~Game();

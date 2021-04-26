@@ -15,6 +15,8 @@ protected:
     };
     Mouse MOUSE=None;
     SDL_Point mouse;
+    SDL_Event event;
+    SDL_Renderer *renderer;
 
 };
 
@@ -35,15 +37,15 @@ class first_Menu: public base_Menu
 
     public:
     //    bool running = false;
-        void loop(SDL_Renderer *ren, bool &ingame);
+        void loop(bool &ingame);
         void input(bool &running);
         void handle_input(bool &running, bool &ingame);
-        void draw(SDL_Renderer *ren);
-        void render(SDL_Renderer *ren);
+        void draw();
+        void render();
         void free();
 
-//    first_Menu();
-//    ~first_Menu();
+    first_Menu(SDL_Renderer *ren);
+    ~first_Menu();
 };
 
 //class second_Menu: public base_Menu
@@ -62,11 +64,11 @@ class first_Menu: public base_Menu
 //
 //    public:
 ////        bool running = false;
-//        void loop(SDL_Renderer *ren, bool &ingame);
+//        void loop(bool &ingame);
 //        void input(bool &running);
 //        void handle_input(bool &running, bool &ingame);
-//        void draw(SDL_Renderer *ren);
-//        void render(SDL_Renderer *ren);
+//        void draw();
+//        void render();
 //        void free();
 //};
 

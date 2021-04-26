@@ -811,7 +811,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1615514639 e:\hoctap\newgame\snake 0.1\game_object.h
+1619276116 e:\hoctap\newgame\snake 0.1\game_object.h
 	<iostream>
 	<ctime>
 	<vector>
@@ -823,7 +823,7 @@
 1615512595 source:e:\hoctap\newgame\snake 0.1\sdl_utils.cpp
 	"SDL_utils.h"
 
-1617548302 source:e:\hoctap\newgame\snake 0.1\main.cpp
+1619276096 source:e:\hoctap\newgame\snake 0.1\main.cpp
 	<iostream>
 	<cmath>
 	<vector>

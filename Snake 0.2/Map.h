@@ -9,13 +9,14 @@ using namespace std;
 
 
 class Map { //include map, wall and fruit
+    SDL_Renderer *renderer;
     SDL_Texture *ground_Texture=nullptr,
                 *fruit_Texture=nullptr,
                 *wall_Texture=nullptr;
 
 public:
     //use in snake::move<void>
-    Map();
+    Map(SDL_Renderer* ren);
     ~Map();
     vector<vector<int>> base_Array;
 
@@ -23,20 +24,19 @@ public:
     void create_Map(); //include wall(or not)
 
     void getFruit();
-    SDL_Point fruit={18, 0};
+    SDL_Point fruit = {18, 0};
 
-    void draw(SDL_Renderer *ren);
-    void render(SDL_Renderer *ren);
-
-    void display_score(int score, SDL_Renderer *renderer);
+    void draw();
+    void render();
+    void display_score(int score);
 
     void free() {
-        SDL_DestroyTexture(ground_Texture);
-        SDL_DestroyTexture(fruit_Texture);
-        SDL_DestroyTexture(wall_Texture);
-        ground_Texture=nullptr,
-        fruit_Texture=nullptr,
-        wall_Texture=nullptr;
+//        SDL_DestroyTexture(ground_Texture);
+//        SDL_DestroyTexture(fruit_Texture);
+//        SDL_DestroyTexture(wall_Texture);
+//        ground_Texture=nullptr,
+//        fruit_Texture=nullptr,
+//        wall_Texture=nullptr;
     }
 
 //    vector<vector<object>> show_in_2Darray(snake SNAKE); //take fruit, snake::body+HEAD,

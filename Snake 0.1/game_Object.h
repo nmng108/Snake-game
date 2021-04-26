@@ -36,6 +36,7 @@ public:
     void update_in_array(); // undefined
     bool eatFruit(Point fruit);
     void getLonger();
+    int score=0;
     Direction DIRECTION = Freeze;
     bool CRASH(); //return 1 if happening accident
 private:
@@ -55,6 +56,7 @@ public:
     Point getFruit(snake SNAKE);
     Point fruit;
     vector<vector<object>> show_in_2Darray(snake SNAKE); //take fruit, snake::body+HEAD,
+    void render_score(int score, SDL_Renderer *ren);
 };
 
 void render_with_2Darray(vector<vector<object>> MAP, int side_of_aUnit, SDL_Renderer *ren);

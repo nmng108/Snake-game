@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
         (*SNAKE).HEAD = {Column_Board/2, Row_Board/2};
         (*SNAKE).body.push_back({Column_Board/2-1, Row_Board/2});
 
-    int count=0;
         while(in_game) {
 //            int start_time=SDL_GetTicks();
 
@@ -62,10 +61,12 @@ int main(int argc, char* argv[])
             if( SNAKE->eatFruit(MAP.fruit) ) {
                 SNAKE->getLonger();
                 MAP.fruit = MAP.getFruit(*SNAKE);
-                cout<<++count<<endl;
+                cout<<++SNAKE->score<<endl;
             }
             SNAKE->Move(old_DIRECTION, Column_Board, Row_Board);
             vector<vector<object>> update_Map = MAP.show_in_2Darray(*SNAKE);
+
+            MAP.render_score(SNAKE->score, renderer);
 
             render_with_2Darray(update_Map, side_of_aUnit, renderer);
             SDL_RenderPresent(renderer);

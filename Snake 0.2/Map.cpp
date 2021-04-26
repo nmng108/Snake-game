@@ -1,14 +1,17 @@
 #include "Map.h"
-Map::Map()
+Map::Map(SDL_Renderer *ren)
 {
+    renderer = ren;
     this->create_Map();
     getFruit();
+    draw();
 }
 Map::~Map()
 {
-//    SDL_DestroyTexture(ground_Texture);
-//    SDL_DestroyTexture(fruit_Texture);
-//    SDL_DestroyTexture(wall_Texture);
+    SDL_DestroyTexture(ground_Texture);
+    SDL_DestroyTexture(fruit_Texture);
+    SDL_DestroyTexture(wall_Texture);
+    SDL_DestroyRenderer(renderer);
 }
 void Map::create_Map()
 {
@@ -43,40 +46,40 @@ void Map::getFruit() //có thể thêm tham số rắn
 //            else sign = 0;
 //        }
     }
-    while(base_Array[fruit.y][fruit.x] != Blank  );
+    while(base_Array[fruit.y][fruit.x] != Blank);
 
     base_Array[fruit.y][fruit.x] = Fruit;
-
     base_Array[tmp.y][tmp.x] = Blank;
 }
 
-void Map::display_score(int score, SDL_Renderer *ren)
+void Map::display_score(int score)
 {
     stringstream save_score;
     save_score<<"Score: "<<score;
     string tmp;
     getline(save_score, tmp);
+    save_score.clear();
 
 //    string tmp = "Score: " + to_string(score);
 
     SDL_Color TEXT_color = {0, 204, 204, 255};
-    renderText(tmp, TEXT_color, ren, 0, 620);
+    renderText(tmp, TEXT_color, renderer, 0, 620);
 }
 
-void Map::draw(SDL_Renderer *ren)
+void Map::draw()
 {
-//    ground_Texture=loadTexture("Resourse/Image/grass.png", ren);
-    wall_Texture=loadTexture("Resourse/Image/block.jpg", ren);
-    fruit_Texture=loadTexture("Resourse/Image/snake2/apple-removebg.png", ren);
+//    ground_Texture=loadTexture("Resourse/Image/grass.png", renderer);
+    wall_Texture=loadTexture("Resourse/Image/block.jpg", renderer);
+    fruit_Texture=loadTexture("Resourse/Image/snake2/apple-removebg.png", renderer);
 }
 
-void Map::render(SDL_Renderer *ren)
+void Map::render()
 {
 //    renderTexture(MAP->ground_Texture, renderer, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-100);
     for(long unsigned int i=0;i<base_Array.size();i++){
         for(long unsigned int j=0;j<base_Array[0].size();j++) {
-            if(base_Array[i][j]==Wall) renderTexture(wall_Texture, ren, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
-            if(base_Array[i][j]==Fruit) renderTexture(fruit_Texture, ren, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
+            if(base_Array[i][j]==Wall) renderTexture(wall_Texture, renderer, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
+            if(base_Array[i][j]==Fruit) renderTexture(fruit_Texture, renderer, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
         }
     }
 }

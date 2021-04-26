@@ -103,21 +103,8 @@ void snake::Move()
         else { DIRECTION = old_DIRECTION; }
     }
 
-//    if(!change) bend_CELL={12,0}; //put in the cell which is out of the board
-
-//        for(int i=0;i<body_snake;i++) {
-//            SDL_Point tmp_point = body[i];
-//
-//            if((body[i].y<old_pos.y) && (body[i].x==old_pos.x)) body[i].y+=velocity; //down
-//            if((body[i].y>old_pos.y) && (body[i].x==old_pos.x)) body[i].y-=velocity; //up
-//            if((body[i].y==old_pos.y) && (body[i].x>old_pos.x)) body[i].x-=velocity; //left
-//            if((body[i].y==old_pos.y) && (body[i].x<old_pos.x)) body[i].x+=velocity; //right
-//
-//            old_pos = tmp_point;
-//        }
 
     body.resize(segments);
-
 
     for(int i=1;i<body.size();i++) {
         POS_n_DIR tmp_point = body[i];
@@ -141,6 +128,34 @@ bool snake::CRASH(vector<vector<int>> Map)
 }
 
                         /**  class entity  */
+entity::~entity()
+{
+    for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]);
+    img_HEAD.clear();
+    SDL_DestroyTexture (img_bend);
+    SDL_DestroyTexture (img_BODY);
+    SDL_DestroyTexture (img_tail);
+    img_BODY=nullptr,
+    img_tail=nullptr,
+    img_bend=nullptr;
+
+    SDL_DestroyRenderer(renderer);
+}
+
+void entity::draw() {
+    while(img_HEAD.size()!=3) {
+        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", renderer));
+        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2a.png", renderer));
+        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2aa.png", renderer));
+    }
+    if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
+        img_BODY = loadTexture("Resourse/Image/Snake2/body.png", renderer);
+        img_bend = loadTexture("Resourse/Image/Snake2/change_direction.png", renderer);
+        img_tail = loadTexture("Resourse/Image/Snake2/tail.png", renderer);
+    }
+}
+
+
 void entity::rotate_body()
 {
     for(int i=1;i<body.size()-1 && body[i].turning != true;i++) { //for all
@@ -171,19 +186,19 @@ void entity::rotate_body()
 //    }
 }
 
-void entity::render(SDL_Renderer *ren)
+void entity::render()
 {
     rotate_body();
 
-    renderTexture(img_HEAD[(tmp_index++)%3], ren, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
+    renderTexture(img_HEAD[(tmp_index++)%3], renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
 
     for(int i=1;i<body.size();i++) {
 
-        if(i==body.size()-1) renderTexture(img_tail, ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
-        else if(body[i].turning==true) renderTexture(img_bend , ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        else if(body[i].turning==true) renderTexture(img_bend , renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
-        else renderTexture(img_BODY, ren, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        else renderTexture(img_BODY, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
     }
 }
 
@@ -191,14 +206,10 @@ void entity::reset()
 {
     body.resize(2);
     segments = 2;
+    DIRECTION = Right;
+    score = 0;
     body[0] = {9, 6, Right, -90, false};
     body[1]={9-1, 6, Right, 90, false};
 }
 
 
-entity::entity()
-{
-    body.resize(2);
-    body[0] = {9, 6, Right, -90, false};
-    body[1]={9-1, 6, Right, 90, false};
-}

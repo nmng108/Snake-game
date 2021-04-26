@@ -28,6 +28,7 @@ public:
 
 class entity : public snake
 {
+    SDL_Renderer *renderer;
     vector<SDL_Texture*> img_HEAD;
     SDL_Texture *img_BODY=nullptr,
                 *img_tail=nullptr,
@@ -37,34 +38,26 @@ class entity : public snake
 
     void rotate_body();
 public:
-    entity();
-    ~entity() {
+    entity(SDL_Renderer *ren){
+        renderer = ren;
+        reset();
+        draw();
     }
+    ~entity();
 
-    void draw(SDL_Renderer *ren) {
-        while(img_HEAD.size()!=3) {
-            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", ren));
-            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2a.png", ren));
-            img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2aa.png", ren));
-        }
-        if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
-            img_BODY = loadTexture("Resourse/Image/Snake2/body.png", ren);
-            img_bend = loadTexture("Resourse/Image/Snake2/change_direction.png", ren);
-            img_tail = loadTexture("Resourse/Image/Snake2/tail.png", ren);
-        }
-    }
-    void render(SDL_Renderer *ren);
+    void draw();
+    void render();
 
     void reset();
 
     void free() {
-        for(int i=0;i<3;i++) SDL_DestroyTexture(img_HEAD[i]);
-        SDL_DestroyTexture (img_bend);
-        SDL_DestroyTexture (img_BODY);
-        SDL_DestroyTexture (img_tail);
-        img_BODY=nullptr,
-        img_tail=nullptr,
-        img_bend=nullptr;
+//        for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]);
+//        SDL_DestroyTexture (img_bend);
+//        SDL_DestroyTexture (img_BODY);
+//        SDL_DestroyTexture (img_tail);
+//        img_BODY=nullptr,
+//        img_tail=nullptr,
+//        img_bend=nullptr;
     }
 };
 #endif // GAME_OBJECT_H

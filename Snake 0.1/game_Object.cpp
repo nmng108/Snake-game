@@ -113,6 +113,14 @@ vector<vector<object>> Map::show_in_2Darray(snake SNAKE)
     return board;
 }
 
+void Map::render_score(int score, SDL_Renderer *ren)
+{
+    string tmp = "Score: " + to_string(score);
+
+    SDL_Color TEXT_color = {0, 204, 204, 255};
+    renderText(tmp, ren, 0, 300);
+}
+
 void render_with_2Darray(vector<vector<object>> MAP, int side_of_aUnit, SDL_Renderer *ren)
 {
     for(int i=0;i<MAP.size();i++) {

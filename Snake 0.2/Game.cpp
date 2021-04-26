@@ -3,39 +3,37 @@
 Game::Game()
 {
     initSDL(window, renderer, WIDTH_SCREEN, HEIGHT_SCREEN, WINDOW_TITLE.c_str());
-    stMenu.draw(renderer);
-    MAP->draw(renderer);
-    SNAKE->draw(renderer);
+    stMenu = new first_Menu(renderer);
+    MAP = new Map (renderer);
+    SNAKE = new entity(renderer);
 }
 Game::~Game()
 {
-    delete MAP;
-    delete SNAKE;
     quitSDL(window, renderer);
+    delete MAP;
+    delete stMenu;
+    delete SNAKE;
 }
 void Game::loop()
 {
     while(running) {
-    //        stMenu.loop(renderer, ingame);
+    //        stMenu->loop(renderer, ingame);
         run_first_Menu();
 
         while(ingame) {
             int start_time=SDL_GetTicks();
 
             input();
-            draw();
             update();
             render();
 
-            int time_loop=SDL_GetTicks() - start_time;
-            if(time_loop<175) SDL_Delay(175-time_loop);
+//            int time_loop=SDL_GetTicks() - start_time;
+//            if(time_loop<175) SDL_Delay(175-time_loop);
+            SDL_Delay(140);
         }
 
         reset();
     }
-    stMenu.free();
-    MAP->free();
-    SNAKE->free();
 }
 
 void Game::input()
@@ -86,32 +84,29 @@ void Game::update()
         cout<<"end";
     }
 }
-void Game::draw()
+
+void Game::render()
 {
+    if(endgame_signal) return;
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
     MAP->base_Array[SNAKE->body[0].y][SNAKE->body[0].x] = SnakeHEAD;
     for(int i=0;i<SNAKE->body.size();i++) MAP->base_Array[SNAKE->body[i].y][SNAKE->body[i].x] = Snake;
+    MAP->render();
 
-}
-void Game::render()
-{
-    if(endgame_signal) return;
+    SNAKE->render();
 
-    MAP->render(renderer);
-
-    SNAKE->render(renderer);
-
-    MAP->display_score(SNAKE->score, renderer);
+    MAP->display_score(SNAKE->score);
     SDL_RenderPresent(renderer);
 }
 
 void Game::run_first_Menu()
 {
-    stMenu.render(renderer);
-    stMenu.input(running);
-    stMenu.handle_input(running, ingame);
+    stMenu->render();
+    stMenu->input(running);
+    stMenu->handle_input(running, ingame);
 }
 
 void Game::reset()
@@ -130,4 +125,5 @@ void Game::reset()
     }
     while (sign == true);
 
+    endgame_signal = 0;
 }
