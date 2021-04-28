@@ -33,6 +33,7 @@ class entity : public snake
     SDL_Texture *img_BODY=nullptr,
                 *img_tail=nullptr,
                 *img_bend=nullptr;
+//    SDL_Texture *img_=nullptr;
 
     int tmp_index=0;
 

@@ -61,3 +61,14 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int
 
 	SDL_RenderCopyEx(ren, tex, NULL, &dest, angle, nullptr, SDL_FLIP_NONE);
 }
+
+void render_a_part_of_Texture(SDL_Texture *tex, SDL_Renderer *ren, int src_x, int src_y, SDL_Rect dst)
+{
+
+	SDL_Rect src;
+	src.x = src_x;
+	src.y = src_y;
+	SDL_QueryTexture(tex, NULL, NULL, &src.w, &src.h);
+
+	SDL_RenderCopy(ren, tex, &src, &dst);
+}

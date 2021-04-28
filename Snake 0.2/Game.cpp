@@ -29,9 +29,8 @@ void Game::loop()
             update();
             render();
 
-//            int time_loop=SDL_GetTicks() - start_time;
-//            if(time_loop<175) SDL_Delay(175-time_loop);
-            SDL_Delay(140);
+            int time_loop=SDL_GetTicks() - start_time;
+            if(time_loop<175) SDL_Delay(175-time_loop);
         }
 
         reset();

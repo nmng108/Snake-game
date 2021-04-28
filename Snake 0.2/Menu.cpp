@@ -103,13 +103,13 @@ void first_Menu::draw()
     SDL_QueryTexture(start_button, NULL, NULL, &start_size.x, &start_size.y);
     start_coordinate.x = WIDTH_SCREEN/2 - start_size.x/2;
     start_coordinate.y = OG_Y_button;
-    cout<<start_coordinate.x<<' '<<start_coordinate.y<<endl;
+//    cout<<start_coordinate.x<<' '<<start_coordinate.y<<endl;
 
     quit_button = loadTexture("Resourse/Image/Menu/quit_button.png", renderer);
     SDL_QueryTexture(quit_button, NULL, NULL, &quit_size.x, &quit_size.y);
     quit_coordinate.x = WIDTH_SCREEN/2 - quit_size.x/2;
     quit_coordinate.y = OG_Y_button + start_size.y + 30;
-    cout<<quit_coordinate.x<<' '<<quit_coordinate.y<<endl;
+//    cout<<quit_coordinate.x<<' '<<quit_coordinate.y<<endl;
 
 }
 
@@ -123,15 +123,6 @@ void first_Menu::render()
     renderTexture(quit_button, renderer, quit_coordinate.x, quit_coordinate.y);
 
     SDL_RenderPresent(renderer);
-}
-void first_Menu::free()
-{
-//    SDL_DestroyTexture(start_button);
-//    SDL_DestroyTexture(guide_button);
-//    SDL_DestroyTexture(quit_button);
-//    start_button=nullptr;
-//    quit_button=nullptr;
-//    guide_button=nullptr;
 }
 
 /** second Menu */

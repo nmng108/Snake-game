@@ -130,7 +130,7 @@ bool snake::CRASH(vector<vector<int>> Map)
                         /**  class entity  */
 entity::~entity()
 {
-    for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]);
+//    for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]); //cause to disappear snake's head ??
     img_HEAD.clear();
 //    SDL_DestroyTexture (img_bend);
 //    SDL_DestroyTexture (img_BODY);
@@ -142,11 +142,11 @@ entity::~entity()
 }
 
 void entity::draw() {
-//    while(img_HEAD.size()<3) {
+    while(img_HEAD.size()<3) {
         img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", renderer));
         img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2z.png", renderer));
         img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2zz.png", renderer));
-//    }
+    }
     if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
         img_BODY = loadTexture("Resourse/Image/Snake2/body.png", renderer);
         img_bend = loadTexture("Resourse/Image/Snake2/change_direction.png", renderer);
@@ -189,12 +189,14 @@ void entity::render()
 {
     rotate_body();
 
+    tmp_index = (tmp_index+1)%3;
 
-    for(int i=0;i<body.size();i++) {
+    renderTexture(img_HEAD[tmp_index], renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
 
-        if(i==0) renderTexture(img_HEAD[(tmp_index++)%3], renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side,body[i].angle );
+    for(int i=1;i<body.size();i++) {
 
-        else if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+
+        if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
         else if(body[i].turning==true) renderTexture(img_bend, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 

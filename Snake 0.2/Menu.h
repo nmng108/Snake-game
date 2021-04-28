@@ -42,7 +42,6 @@ class first_Menu: public base_Menu
         void handle_input(bool &running, bool &ingame);
         void draw();
         void render();
-        void free();
 
     first_Menu(SDL_Renderer *ren);
     ~first_Menu();

@@ -25,7 +25,7 @@ void Map::create_Map()
 
 }
 
-void Map::getFruit(entity SNAKE) //có thể thêm tham số rắn
+void Map::getFruit(entity SNAKE)
 {
     srand(time(0));
 

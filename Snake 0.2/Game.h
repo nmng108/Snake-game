@@ -15,6 +15,7 @@ class Game {
     first_Menu* stMenu = nullptr;
     entity *SNAKE = nullptr;
     Map *MAP = nullptr;
+
     bool ingame = 0, running = 1, run_Menu = 1;
     SDL_Event event;
 
