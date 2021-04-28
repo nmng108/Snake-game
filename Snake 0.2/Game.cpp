@@ -10,15 +10,17 @@ Game::Game()
 Game::~Game()
 {
     quitSDL(window, renderer);
-    delete MAP;
-    delete stMenu;
-    delete SNAKE;
+//    delete MAP;
+//    delete stMenu;
+//    delete SNAKE;
 }
 void Game::loop()
 {
+    MAP->getFruit(*SNAKE);
     while(running) {
-    //        stMenu->loop(renderer, ingame);
-        run_first_Menu();
+        run_Menu = 1;
+        stMenu->loop(run_Menu, running, ingame);
+//        run_first_Menu();
 
         while(ingame) {
             int start_time=SDL_GetTicks();
@@ -41,6 +43,7 @@ void Game::input()
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
             ingame = 0;
+            running = 0;
             break;
         }
         if(event.type == SDL_KEYDOWN) {
@@ -60,29 +63,38 @@ void Game::input()
 void Game::update()
 {
     SNAKE->Move();
-    cout<<MAP->fruit.x<<", "<<MAP->fruit.y<<endl;
+
+    if(SNAKE->CRASH(MAP->base_Array)) {
+        ingame = false;
+        endgame_signal = 1;
+        cout<<"end\n";
+        return;
+    }
+
+    MAP->create_Map();
+    MAP->base_Array[MAP->fruit.y][MAP->fruit.x] = Fruit;
+    for(int i=0;i<SNAKE->body.size();i++) MAP->base_Array[SNAKE->body[i].y][SNAKE->body[i].x] = Snake;
+    MAP->base_Array[SNAKE->body[0].y][SNAKE->body[0].x] = SnakeHEAD;
+
     if(SNAKE->eatFruit(MAP->fruit) ) {
-        bool sign=0;
-        do {
-            MAP->getFruit();
-            for(int i=0;i<SNAKE->body.size();i++) {
-                if(MAP->fruit.x==SNAKE->body[i].x && MAP->fruit.y==SNAKE->body[i].y) {
-                    sign = 1;
-                    break;
-                }
-            }
-        }
-        while (sign == true);
+//        bool sign=0;
+//        do {
+//            sign = 0;
+            MAP->getFruit(*SNAKE);
+//            for(int i=0;i<SNAKE->body.size();i++) {
+//                if(MAP->fruit.x==SNAKE->body[i].x && MAP->fruit.y==SNAKE->body[i].y) {
+//                    sign = 1;
+//                    break;
+//                }
+//            }
+//        }
+//        while (sign == true);
 
         ++SNAKE->score;
 //        start = false;
     }
 
-    if(SNAKE->CRASH(MAP->base_Array)) {
-        ingame = false;
-        endgame_signal = 1;
-        cout<<"end";
-    }
+
 }
 
 void Game::render()
@@ -92,8 +104,6 @@ void Game::render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    MAP->base_Array[SNAKE->body[0].y][SNAKE->body[0].x] = SnakeHEAD;
-    for(int i=0;i<SNAKE->body.size();i++) MAP->base_Array[SNAKE->body[i].y][SNAKE->body[i].x] = Snake;
     MAP->render();
 
     SNAKE->render();
@@ -102,12 +112,12 @@ void Game::render()
     SDL_RenderPresent(renderer);
 }
 
-void Game::run_first_Menu()
-{
-    stMenu->render();
-    stMenu->input(running);
-    stMenu->handle_input(running, ingame);
-}
+//void Game::run_first_Menu()
+//{
+//    stMenu->render();
+//    stMenu->input(running);
+//    stMenu->handle_input(running, ingame);
+//}
 
 void Game::reset()
 {
@@ -115,13 +125,14 @@ void Game::reset()
 
     bool sign=0;
     do {
-        MAP->getFruit();
-        for(int i=0;i<SNAKE->body.size();i++) {
-            if(MAP->fruit.x==SNAKE->body[i].x && MAP->fruit.y==SNAKE->body[i].y) {
-                sign = 1;
-                break;
-            }
-        }
+        sign = 0;
+        MAP->getFruit(*SNAKE);
+//        for(int i=0;i<SNAKE->body.size();i++) {
+//            if(MAP->fruit.x==SNAKE->body[i].x && MAP->fruit.y==SNAKE->body[i].y) {
+//                sign = 1;
+//                break;
+//            }
+//        }
     }
     while (sign == true);
 

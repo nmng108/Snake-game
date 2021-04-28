@@ -9,9 +9,9 @@ first_Menu::first_Menu(SDL_Renderer *ren)
 
 first_Menu::~first_Menu()
 {
-    SDL_DestroyTexture(start_button);
-    SDL_DestroyTexture(quit_button);
-    SDL_DestroyTexture(guide_button);
+//    SDL_DestroyTexture(start_button);
+//    SDL_DestroyTexture(quit_button);
+//    SDL_DestroyTexture(guide_button);
     SDL_DestroyRenderer(renderer);
 }
 void first_Menu::input(bool &running)
@@ -20,6 +20,12 @@ void first_Menu::input(bool &running)
 
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
+            running_Menu = 0;
+            running = false;
+            break;
+        }
+        if(event.key.keysym.sym == SDLK_ESCAPE) {
+            running_Menu = 0;
             running = false;
             break;
         }
@@ -31,7 +37,6 @@ void first_Menu::input(bool &running)
         if(event.type == SDL_MOUSEBUTTONUP){
             if(event.button.button == SDL_BUTTON_LEFT) {
                 MOUSE = Left_Up;
-
             }
         }
     }
@@ -55,7 +60,7 @@ void first_Menu::handle_input(bool &running, bool &ingame)
             if(start_click_signal == 1) {
                 start_click_signal = 0;
                 ingame = 1;
-                cout<<mouse.x<<' '<<mouse.y<<endl;
+                running_Menu = 0;
             }
     }
 
@@ -76,19 +81,20 @@ void first_Menu::handle_input(bool &running, bool &ingame)
             quit_click_signal = 0;
             ingame = 0;
             running = 0;
-            cout<<mouse.x<<' '<<mouse.y<<endl;
+            running_Menu = 0;
         }
     }
 }
 
-void first_Menu::loop(bool &ingame)
+void first_Menu::loop(bool &run_Menu, bool &running, bool &ingame)
 {
-//    while(running) {
-//        render(ren);
-//        input();
-//        handle_input(ingame);
+    running_Menu = run_Menu;
 
-//    }
+    while(running_Menu) {
+        render();
+        input(running);
+        handle_input(running, ingame);
+    }
 }
 
 void first_Menu::draw()
@@ -245,5 +251,5 @@ void first_Menu::free()
 //    quit_button=nullptr;
 //    guide_button=nullptr;
 //
-//} asa
+//}
 

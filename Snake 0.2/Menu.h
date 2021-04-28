@@ -34,10 +34,10 @@ class first_Menu: public base_Menu
 
         int OG_Y_button = 250; //optional original y coordinate for the first button
 
-
+        bool running_Menu = true;
     public:
     //    bool running = false;
-        void loop(bool &ingame);
+        void loop(bool &run_Menu, bool &running, bool &ingame);
         void input(bool &running);
         void handle_input(bool &running, bool &ingame);
         void draw();

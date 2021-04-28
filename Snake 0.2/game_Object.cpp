@@ -132,22 +132,21 @@ entity::~entity()
 {
     for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]);
     img_HEAD.clear();
-    SDL_DestroyTexture (img_bend);
-    SDL_DestroyTexture (img_BODY);
-    SDL_DestroyTexture (img_tail);
+//    SDL_DestroyTexture (img_bend);
+//    SDL_DestroyTexture (img_BODY);
+//    SDL_DestroyTexture (img_tail);
     img_BODY=nullptr,
     img_tail=nullptr,
     img_bend=nullptr;
-
-    SDL_DestroyRenderer(renderer);
+//    SDL_DestroyRenderer(renderer);
 }
 
 void entity::draw() {
-    while(img_HEAD.size()!=3) {
+//    while(img_HEAD.size()<3) {
         img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2.png", renderer));
-        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2a.png", renderer));
-        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2aa.png", renderer));
-    }
+        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2z.png", renderer));
+        img_HEAD.push_back(loadTexture("Resourse/Image/Snake2/head2zz.png", renderer));
+//    }
     if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
         img_BODY = loadTexture("Resourse/Image/Snake2/body.png", renderer);
         img_bend = loadTexture("Resourse/Image/Snake2/change_direction.png", renderer);
@@ -190,13 +189,14 @@ void entity::render()
 {
     rotate_body();
 
-    renderTexture(img_HEAD[(tmp_index++)%3], renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
 
-    for(int i=1;i<body.size();i++) {
+    for(int i=0;i<body.size();i++) {
 
-        if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        if(i==0) renderTexture(img_HEAD[(tmp_index++)%3], renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side,body[i].angle );
 
-        else if(body[i].turning==true) renderTexture(img_bend , renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        else if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+
+        else if(body[i].turning==true) renderTexture(img_bend, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
         else renderTexture(img_BODY, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
     }

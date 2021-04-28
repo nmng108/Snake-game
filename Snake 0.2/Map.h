@@ -23,7 +23,7 @@ public:
     void choose_Map();    // ***
     void create_Map(); //include wall(or not)
 
-    void getFruit();
+    void getFruit(entity SNAKE);
     SDL_Point fruit = {18, 0};
 
     void draw();

@@ -3,14 +3,13 @@ Map::Map(SDL_Renderer *ren)
 {
     renderer = ren;
     this->create_Map();
-    getFruit();
     draw();
 }
 Map::~Map()
 {
-    SDL_DestroyTexture(ground_Texture);
-    SDL_DestroyTexture(fruit_Texture);
-    SDL_DestroyTexture(wall_Texture);
+//    SDL_DestroyTexture(ground_Texture);
+//    SDL_DestroyTexture(fruit_Texture);
+//    SDL_DestroyTexture(wall_Texture);
     SDL_DestroyRenderer(renderer);
 }
 void Map::create_Map()
@@ -26,30 +25,30 @@ void Map::create_Map()
 
 }
 
-void Map::getFruit() //có thể thêm tham số rắn
+void Map::getFruit(entity SNAKE) //có thể thêm tham số rắn
 {
     srand(time(0));
 
-    SDL_Point tmp={fruit.x, fruit.y};
+//    SDL_Point tmp={fruit.x, fruit.y};
 
-    base_Array[fruit.y][fruit.x]=SnakeHEAD;
-//    bool sign=0;
+    base_Array[fruit.y][fruit.x]=Blank;
+    bool sign=0;
     do {
         fruit.x=rand()%array_COL;
         fruit.y=rand()%array_ROW;
 
-//        for(int i=0;i<SNAKE.body.size();i++) {
-//            if(fruit.x==SNAKE.body[i].x && fruit.y==SNAKE.body[i].y) {
-//                sign = 1;
-//                break;
-//            }
-//            else sign = 0;
-//        }
+        for(int i=0;i<SNAKE.body.size();i++) {
+            if(fruit.x==SNAKE.body[i].x && fruit.y==SNAKE.body[i].y) {
+                sign = 1;
+                break;
+            }
+            else sign = 0;
+        }
     }
-    while(base_Array[fruit.y][fruit.x] != Blank);
+    while(base_Array[fruit.y][fruit.x] != Blank || sign == 1);
 
-    base_Array[fruit.y][fruit.x] = Fruit;
-    base_Array[tmp.y][tmp.x] = Blank;
+//    base_Array[tmp.y][tmp.x] = Blank;
+//    base_Array[fruit.y][fruit.x] = Fruit;
 }
 
 void Map::display_score(int score)
