@@ -436,7 +436,7 @@
 
 1619088051 ated upstream
 
-1619507930 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
+1619668023 source:e:\hoctap\newgame\snake 0.2\game_object.cpp
 	"game_Object.h"
 
 1619088051 shed changes
@@ -452,7 +452,7 @@
 	"Texture.h"
 	"Map.h"
 
-1619507930 e:\hoctap\newgame\snake 0.2\game_object.h
+1619674924 e:\hoctap\newgame\snake 0.2\game_object.h
 	"SDL_utils.h"
 	"Texture.h"
 
@@ -848,13 +848,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1617814105 e:\hoctap\newgame\snake 0.2\texture.h
+1619668023 e:\hoctap\newgame\snake 0.2\texture.h
 	"SDL_utils.h"
 
 1619444003 source:e:\hoctap\newgame\snake 0.2\main.cpp
 	"Game.h"
 
-1619459204 e:\hoctap\newgame\snake 0.2\game.h
+1619674989 e:\hoctap\newgame\snake 0.2\game.h
 	"game_Object.h"
 	"Map.h"
 	"Texture.h"
@@ -865,23 +865,24 @@
 	"Texture.h"
 	"game_Object.h"
 
-1619508585 source:e:\hoctap\newgame\snake 0.2\map.cpp
+1619675049 source:e:\hoctap\newgame\snake 0.2\map.cpp
 	"Map.h"
 
 1618077858 source:e:\hoctap\newgame\snake 0.2\sdl_utils.cpp
 	"SDL_utils.h"
 
-1619442822 source:e:\hoctap\newgame\snake 0.2\texture.cpp
+1619668023 source:e:\hoctap\newgame\snake 0.2\texture.cpp
 	"Texture.h"
 
-1619498507 source:e:\hoctap\newgame\snake 0.2\game.cpp
+1619777634 source:e:\hoctap\newgame\snake 0.2\game.cpp
 	"Game.h"
 
-1619492391 e:\hoctap\newgame\snake 0.2\menu.h
+1619789324 e:\hoctap\newgame\snake 0.2\menu.h
 	"SDL_utils.h"
 	"Texture.h"
+	"Button.h"
 
-1619459534 source:e:\hoctap\newgame\snake 0.2\menu.cpp
+1619788950 source:e:\hoctap\newgame\snake 0.2\menu.cpp
 	"Menu.h"
 
 1619196577 source:c:\users\admin\documents\github\snake-game\snake 0.2\main.cpp
@@ -1753,4 +1754,11 @@
 
 1619620636 source:c:\learn coding\project\snake-game\snake 0.2\texture.cpp
 	"Texture.h"
+
+1619783110 e:\hoctap\newgame\snake 0.2\button.h
+	"SDL_utils.h"
+	"Texture.h"
+
+1619788442 source:e:\hoctap\newgame\snake 0.2\button.cpp
+	"Button.h"
 

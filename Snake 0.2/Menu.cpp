@@ -4,6 +4,8 @@
 first_Menu::first_Menu(SDL_Renderer *ren)
 {
     renderer = ren;
+    start_button = new Button(ren);
+    quit_button = new Button(ren);
     draw();
 }
 
@@ -13,7 +15,20 @@ first_Menu::~first_Menu()
 //    SDL_DestroyTexture(quit_button);
 //    SDL_DestroyTexture(guide_button);
     SDL_DestroyRenderer(renderer);
+    delete start_button, quit_button;
 }
+
+void first_Menu::loop(bool &run_Menu, bool &running, bool &ingame)
+{
+    running_Menu = run_Menu;
+
+    while(running_Menu) {
+        render();
+        input(running);
+        handle_input(running, ingame);
+    }
+}
+
 void first_Menu::input(bool &running)
 {
     SDL_GetMouseState(&mouse.x, &mouse.y);
@@ -45,82 +60,41 @@ void first_Menu::input(bool &running)
 void first_Menu::handle_input(bool &running, bool &ingame)
 {
     /**click in START button */
-    if(MOUSE == Left_Down) {
-        if( ( mouse.x>=start_coordinate.x && mouse.x<=(start_coordinate.x+start_size.x) )
-          &&( mouse.y>=start_coordinate.y && mouse.y<=(start_coordinate.y+start_size.y) ) )  {
-
-           start_click_signal = 1;
-        }
-        else start_click_signal = 0;
-    }
-
-    if(MOUSE == Left_Up && (mouse.x>=start_coordinate.x && mouse.x<=(start_coordinate.x+start_size.x))
-       && (mouse.y>=start_coordinate.y && mouse.y<=(start_coordinate.y+start_size.y))) {
-
-            if(start_click_signal == 1) {
-                start_click_signal = 0;
-                ingame = 1;
-                running_Menu = 0;
-            }
+    start_button->handle_input(MOUSE, mouse);
+    if(start_button->chosen) {
+        ingame = 1;
+        running_Menu = 0;
+        start_button->chosen = false;
     }
 
     /**click in QUIT button */
-    if(MOUSE == Left_Down) {
-        if( ( mouse.x>=quit_coordinate.x && mouse.x<=(quit_coordinate.x+quit_size.x) )
-          &&( mouse.y>=quit_coordinate.y && mouse.y<=(quit_coordinate.y+quit_size.y) ) )  {
-
-           quit_click_signal = 1;
-        }
-        else quit_click_signal = 0;
-    }
-
-    if(MOUSE == Left_Up && (mouse.x>=quit_coordinate.x && mouse.x<=(quit_coordinate.x+quit_size.x))
-                        && (mouse.y>=quit_coordinate.y && mouse.y<=(quit_coordinate.y+quit_size.y))) {
-
-        if(quit_click_signal == 1) {
-            quit_click_signal = 0;
-            ingame = 0;
-            running = 0;
-            running_Menu = 0;
-        }
-    }
-}
-
-void first_Menu::loop(bool &run_Menu, bool &running, bool &ingame)
-{
-    running_Menu = run_Menu;
-
-    while(running_Menu) {
-        render();
-        input(running);
-        handle_input(running, ingame);
+    quit_button->handle_input(MOUSE, mouse);
+    if(quit_button->chosen) {
+        ingame = 0;
+        running = 0;
+        running_Menu = 0;
+        quit_button->chosen = false;
     }
 }
 
 void first_Menu::draw()
 {
-    start_button = loadTexture("Resourse/Image/Menu/start_button.png", renderer);
-    SDL_QueryTexture(start_button, NULL, NULL, &start_size.x, &start_size.y);
-    start_coordinate.x = WIDTH_SCREEN/2 - start_size.x/2;
-    start_coordinate.y = OG_Y_button;
-//    cout<<start_coordinate.x<<' '<<start_coordinate.y<<endl;
+    backgr_IMG = loadTexture("Resourse/Image/Menu/backgr.png", renderer);
 
-    quit_button = loadTexture("Resourse/Image/Menu/quit_button.png", renderer);
-    SDL_QueryTexture(quit_button, NULL, NULL, &quit_size.x, &quit_size.y);
-    quit_coordinate.x = WIDTH_SCREEN/2 - quit_size.x/2;
-    quit_coordinate.y = OG_Y_button + start_size.y + 30;
-//    cout<<quit_coordinate.x<<' '<<quit_coordinate.y<<endl;
+    start_button->draw("start_button", button_OG_y_crd);
 
+    quit_button->draw("quit_button", (start_button->coordinate.y + start_button->Size.y + 30));
 }
 
 void first_Menu::render()
 {
     SDL_SetRenderDrawColor(renderer, 0 ,0 ,0 , 255);
     SDL_RenderClear(renderer);
+    renderTexture(backgr_IMG, renderer, 0, 0);
 
-    renderTexture(start_button, renderer, start_coordinate.x, start_coordinate.y);
+    start_button->render();
 
-    renderTexture(quit_button, renderer, quit_coordinate.x, quit_coordinate.y);
+    quit_button->render();
 
     SDL_RenderPresent(renderer);
 }
@@ -208,18 +182,6 @@ void first_Menu::render()
 //
 //void second_Menu::draw(SDL_Renderer *renderer)
 //{
-//    start_button = loadTexture("Resourse/Image/Menu/start_button.png", renderer);
-//    SDL_QueryTexture(start_button, NULL, NULL, &start_size.x, &start_size.y);
-//    start_coordinate.x = WIDTH_SCREEN/2 - start_size.x/2;
-//    start_coordinate.y = OG_Y_button;
-//    cout<<start_coordinate.x<<' '<<start_coordinate.y<<endl;
-//
-//    quit_button = loadTexture("Resourse/Image/Menu/quit_button.png", renderer);
-//    SDL_QueryTexture(quit_button, NULL, NULL, &quit_size.x, &quit_size.y);
-//    quit_coordinate.x = WIDTH_SCREEN/2 - quit_size.x/2;
-//    quit_coordinate.y = OG_Y_button + start_size.y + 30;
-//    cout<<quit_coordinate.x<<' '<<quit_coordinate.y<<endl;
-//
 //}
 //
 //void second_Menu::render(SDL_Renderer *renderer)
@@ -243,4 +205,3 @@ void first_Menu::render()
 //    guide_button=nullptr;
 //
 //}
-

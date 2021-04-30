@@ -10,13 +10,14 @@ Game::Game()
 Game::~Game()
 {
     quitSDL(window, renderer);
-//    delete MAP;
-//    delete stMenu;
-//    delete SNAKE;
+    delete MAP;
+    delete stMenu;
+    delete SNAKE;
 }
 void Game::loop()
 {
     MAP->getFruit(*SNAKE);
+
     while(running) {
         run_Menu = 1;
         stMenu->loop(run_Menu, running, ingame);
@@ -30,7 +31,7 @@ void Game::loop()
             render();
 
             int time_loop=SDL_GetTicks() - start_time;
-            if(time_loop<175) SDL_Delay(175-time_loop);
+            if(time_loop<FPS) SDL_Delay(FPS-time_loop);
         }
 
         reset();

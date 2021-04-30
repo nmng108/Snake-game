@@ -51,14 +51,5 @@ public:
 
     void reset();
 
-    void free() {
-//        for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]);
-//        SDL_DestroyTexture (img_bend);
-//        SDL_DestroyTexture (img_BODY);
-//        SDL_DestroyTexture (img_tail);
-//        img_BODY=nullptr,
-//        img_tail=nullptr,
-//        img_bend=nullptr;
-    }
 };
 #endif // GAME_OBJECT_H

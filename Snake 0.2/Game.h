@@ -16,6 +16,8 @@ class Game {
     entity *SNAKE = nullptr;
     Map *MAP = nullptr;
 
+    const int FPS = 1000/9;
+
     bool ingame = 0, running = 1, run_Menu = 1;
     SDL_Event event;
 
