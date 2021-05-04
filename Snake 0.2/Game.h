@@ -16,22 +16,25 @@ class Game {
     entity *SNAKE = nullptr;
     Map *MAP = nullptr;
 
-    const int FPS = 1000/9;
+    const double FPS = 7;
 
-    bool ingame = 0, running = 1, run_Menu = 1;
     SDL_Event event;
 
-    bool endgame_signal=0;
+    bool ingame = 0, running = 1, run_Menu = 1;
+    bool endgame_signal = 0, win=0, game_continue = 1;
+
+    void ingame_loop(int &level);
+    void update(int &level);
+    void render();
+    void input();
+    void reset();
+    void display_level(int const level);
+    void after_game();
 
 public:
     Game();
     ~Game();
-    void run_first_Menu();
     void loop();
-    void update();
-    void render();
-    void input();
-    void reset();
 };
 
 #endif // GAME_H

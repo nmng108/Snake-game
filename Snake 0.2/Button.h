@@ -17,16 +17,16 @@ class Button
     private:
         SDL_Renderer *renderer;
         vector<SDL_Texture*> button_IMG;
+        bool click_signal = 0,
+             pointed = 0;
     public:
         Button(SDL_Renderer *ren);
         ~Button();
-        bool click_signal = 0,
-             chosen = 0;
+        bool chosen = 0;
         void draw(string const &filepath_keyword, int crd_y);
         void render();
         void handle_input(Mouse MOUSE, SDL_Point mouse);
         SDL_Point coordinate, Size;
 };
-
 
 #endif // BUTTON_H

@@ -2,7 +2,14 @@
 Map::Map(SDL_Renderer *ren)
 {
     renderer = ren;
-    this->create_Map();
+
+    list_of_Maps.resize(number_of_maps);
+    for(int i=0;i<number_of_maps;i++) {
+        string tmp="Resource/Map/map" + to_string(i) + ".txt";
+        list_of_Maps[i] = tmp;
+    }
+    this->create_Map(0);
+
     draw();
 }
 Map::~Map()
@@ -11,18 +18,19 @@ Map::~Map()
 //    SDL_DestroyTexture(fruit_Texture);
 //    SDL_DestroyTexture(wall_Texture);
     SDL_DestroyRenderer(renderer);
+    list_of_Maps.clear();
 }
-void Map::create_Map()
+void Map::create_Map(int mapList_index)
 {
     base_Array.resize(array_ROW);
     for(int i=0;i<array_ROW;i++) base_Array[i].resize(array_COL);
 
-    ifstream fileInput("Resourse/Map/map1.txt");
-    if(fileInput.fail()) exit(-1);
+    ifstream InputFile(list_of_Maps[mapList_index]);
+    if(InputFile.fail()) exit(-1);
 
     for(int i=0; i<array_ROW;i++)
-        for(int j=0;j<array_COL && !fileInput.eof();j++)  fileInput>>base_Array[i][j];
-
+        for(int j=0;j<array_COL && !InputFile.eof();j++)  InputFile>>base_Array[i][j];
+    InputFile.close();
 }
 
 void Map::getFruit(entity SNAKE)
@@ -53,23 +61,18 @@ void Map::getFruit(entity SNAKE)
 
 void Map::display_score(int score)
 {
-    stringstream save_score;
-    save_score<<"Score: "<<score;
-    string tmp;
-    getline(save_score, tmp);
-    save_score.clear();
+    string tmp = "Score: " + to_string(score);
 
-//    string tmp = "Score: " + to_string(score);
-
-    SDL_Color TEXT_color = {0, 204, 204, 255};
-    renderText(tmp, TEXT_color, renderer, 0, 620);
+    SDL_Color Score_color={126,145,91,255};
+    string font="Resource/Fonts/amatic/amatic-bold.ttf";
+    renderText(tmp, Score_color, font, 60, renderer, 10, 620);
 }
 
 void Map::draw()
 {
-//    ground_Texture=loadTexture("Resourse/Image/grass.png", renderer);
-    wall_Texture=loadTexture("Resourse/Image/block.jpg", renderer);
-    fruit_Texture=loadTexture("Resourse/Image/snake2/apple-removebg.png", renderer);
+//    ground_Texture=loadTexture("Resource/Image/grass.png", renderer);
+    wall_Texture=loadTexture("Resource/Image/block.jpg", renderer);
+    fruit_Texture=loadTexture("Resource/Image/snake2/apple-removebg.png", renderer);
 }
 
 void Map::render()
@@ -81,4 +84,6 @@ void Map::render()
             if(base_Array[i][j]==Fruit) renderTexture(fruit_Texture, renderer, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
         }
     }
+    SDL_SetRenderDrawColor(renderer, 0, 48, 200, 255);
+    SDL_RenderDrawLine(renderer, 0, 600, 900, 600);
 }

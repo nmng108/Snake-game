@@ -7,7 +7,6 @@ using namespace std;
 class snake { //go straight, divert
 protected:
     Direction old_DIRECTION=Freeze;
-    int segments=2;
     int const velocity=1;
 
     struct POS_n_DIR
@@ -18,12 +17,17 @@ protected:
         bool turning;
     };
 public:
-    vector <POS_n_DIR> body;
     void Move();
-    bool eatFruit(SDL_Point fruit); //get longer
+    void reset();
+
     Direction DIRECTION = Freeze;
+    vector <POS_n_DIR> body;
     int score = 0;
+    int score_needed_to_pass_aLevel = 3;
+
+    bool eatFruit(SDL_Point fruit); //get longer
     bool CRASH(vector<vector<int>> Map); //return 1 if happening accident
+    bool levelup();
 };
 
 class entity : public snake
@@ -48,8 +52,6 @@ public:
 
     void draw();
     void render();
-
-    void reset();
 
 };
 #endif // GAME_OBJECT_H

@@ -14,14 +14,15 @@ class Map { //include map, wall and fruit
                 *fruit_Texture=nullptr,
                 *wall_Texture=nullptr;
 
+    vector<string> list_of_Maps;
 public:
     //use in snake::move<void>
     Map(SDL_Renderer* ren);
     ~Map();
     vector<vector<int>> base_Array;
 
-    void choose_Map();    // ***
-    void create_Map(); //include wall(or not)
+    int number_of_maps = 5;
+    void create_Map(int mapList_index); //include wall(or not)
 
     void getFruit(entity SNAKE);
     SDL_Point fruit = {18, 0};
@@ -29,16 +30,6 @@ public:
     void draw();
     void render();
     void display_score(int score);
-
-    void free() {
-//        SDL_DestroyTexture(ground_Texture);
-//        SDL_DestroyTexture(fruit_Texture);
-//        SDL_DestroyTexture(wall_Texture);
-//        ground_Texture=nullptr,
-//        fruit_Texture=nullptr,
-//        wall_Texture=nullptr;
-    }
-
 //    vector<vector<object>> show_in_2Darray(snake SNAKE); //take fruit, snake::body+HEAD,
 };
 

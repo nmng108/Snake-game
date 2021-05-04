@@ -14,7 +14,9 @@
 
 #define WIDTH_SCREEN 900
 #define HEIGHT_SCREEN 700
+
 using namespace std;
+
 const int CELL_side=50;
     const int array_COL = WIDTH_SCREEN/CELL_side;
     const int array_ROW =(HEIGHT_SCREEN-100)/CELL_side;

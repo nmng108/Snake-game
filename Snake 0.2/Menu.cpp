@@ -5,33 +5,38 @@ first_Menu::first_Menu(SDL_Renderer *ren)
 {
     renderer = ren;
     start_button = new Button(ren);
+    highScore_button = new Button(ren);
     quit_button = new Button(ren);
     draw();
 }
 
 first_Menu::~first_Menu()
 {
-//    SDL_DestroyTexture(start_button);
-//    SDL_DestroyTexture(quit_button);
-//    SDL_DestroyTexture(guide_button);
     SDL_DestroyRenderer(renderer);
-    delete start_button, quit_button;
+    delete start_button;
+    delete highScore_button;
+    delete quit_button;
 }
 
-void first_Menu::loop(bool &run_Menu, bool &running, bool &ingame)
+void first_Menu::open(bool &run_Menu, bool &running, bool &ingame)
 {
     running_Menu = run_Menu;
-
     while(running_Menu) {
-        render();
-        input(running);
-        handle_input(running, ingame);
+        if(open_high_score_board) display_high_score_board(run_Menu, running);
+        else {
+            render();
+            input(running);
+            handle_input(running, ingame);
+        }
     }
 }
 
 void first_Menu::input(bool &running)
 {
     SDL_GetMouseState(&mouse.x, &mouse.y);
+
+    event.key.keysym.sym=SDLK_UNKNOWN;
+    event.type=SDL_FIRSTEVENT;
 
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
@@ -59,44 +64,113 @@ void first_Menu::input(bool &running)
 
 void first_Menu::handle_input(bool &running, bool &ingame)
 {
-    /**click in START button */
+    /** click on Start */
     start_button->handle_input(MOUSE, mouse);
     if(start_button->chosen) {
-        ingame = 1;
-        running_Menu = 0;
+        ingame = true;
+        running_Menu = false;
         start_button->chosen = false;
     }
 
-    /**click in QUIT button */
+    /** click on High Score */
+    highScore_button->handle_input(MOUSE, mouse);
+    if(highScore_button->chosen) {
+        open_high_score_board = true;
+        highScore_button->chosen = false;
+    }
+
+    /** click on Quit */
     quit_button->handle_input(MOUSE, mouse);
     if(quit_button->chosen) {
-        ingame = 0;
-        running = 0;
-        running_Menu = 0;
+        ingame = false;
+        running = false;
+        running_Menu = false;
         quit_button->chosen = false;
     }
 }
 
 void first_Menu::draw()
 {
-    backgr_IMG = loadTexture("Resourse/Image/Menu/backgr.png", renderer);
+    backgr_IMG = loadTexture("Resource/Image/Menu/backgr.png", renderer);
 
-    start_button->draw("start_button", button_OG_y_crd);
-
-    quit_button->draw("quit_button", (start_button->coordinate.y + start_button->Size.y + 30));
+    start_button->draw("start", button_OG_y_crd);
+    highScore_button->draw("highScore", (start_button->coordinate.y + start_button->Size.y + 30));
+    quit_button->draw("quit", (highScore_button->coordinate.y + highScore_button->Size.y + 30));
 }
 
 void first_Menu::render()
 {
-    SDL_SetRenderDrawColor(renderer, 0 ,0 ,0 , 255);
-    SDL_RenderClear(renderer);
-    renderTexture(backgr_IMG, renderer, 0, 0);
+    if(!open_high_score_board)
+    {
+        renderTexture(backgr_IMG, renderer, 0, 0);
+        start_button->render();
+        highScore_button->render();
+        quit_button->render();
+    }
+    SDL_RenderPresent(renderer);
+}
 
-    start_button->render();
 
-    quit_button->render();
+void first_Menu::process_score_log(const int &new_score)
+{
+    fstream score_log("Resource/score_log.txt", ios::in);
+    arr_score.clear();
+    while(!score_log.eof()) { //read the last number twice???
+        int tmp;
+        score_log>>tmp;
+        arr_score.push_back(tmp);
+    }
+    score_log.close();
+
+    arr_score[arr_score.size()-1]=new_score;
+
+    for(int i=0;i<arr_score.size();i++)
+        for(int j=i+1;j<arr_score.size();j++)
+            if(arr_score[i]==arr_score[j]) arr_score.erase(arr_score.begin()+j);
+
+    for(int i=0;i<arr_score.size()-1;i++){
+        int iMax=i;
+        for(int j=i+1;j<arr_score.size();j++) if(arr_score[iMax]<arr_score[j]) iMax=j;
+        int tmp=arr_score[i];
+        arr_score[i]=arr_score[iMax];
+        arr_score[iMax]=tmp;
+    }
+
+    score_log.open("Resource/score_log.txt", ios::out);
+    if(arr_score.size() > 10) arr_score.resize(10);
+    for(int i=0;i<arr_score.size();i++) score_log<<arr_score[i]<<endl;
+    score_log.close();
+}
+
+void first_Menu::display_high_score_board(bool &run_Menu, bool &running)
+{
+    renderTexture("Resource/Image/hghScr_board.png", renderer, 0, 0);
+    vector<SDL_Color> color = {{136, 0, 27, 255}, {176, 88, 105, 255}, {225, 139, 185, 255}, {207, 152, 231, 255}, {144, 132, 178, 255}};
+
+    ifstream score_log("Resource/score_log.txt");
+    arr_score.resize(5);
+    for(int i=0; (i<5) && !score_log.eof(); i++) {
+        score_log>>arr_score[i];
+        renderText(to_string(arr_score[i]), color[i], "Resource/Fonts/Tekton-Pro-Bold.ttf", 48, renderer, 500, 233 + i*63);
+    }
+    score_log.close();
 
     SDL_RenderPresent(renderer);
+    while(true)
+        if(SDL_WaitEvent(&event)) {
+            if(event.type == SDL_QUIT) {
+                open_high_score_board = 0;
+                running = false;
+                running_Menu = false;
+                return;
+            }
+            if(event.type == SDL_KEYDOWN) {
+                open_high_score_board = 0;
+                return;
+            }
+        }
+
+
 }
 
 /** second Menu */
@@ -129,45 +203,8 @@ void first_Menu::render()
 //void second_Menu::handle_input(bool &running, bool &ingame)
 //{
 //    /**click in START button */
-//    if(MOUSE == Left_Down) {
-//        if( ( mouse.x>=start_coordinate.x && mouse.x<=(start_coordinate.x+start_size.x) )
-//          &&( mouse.y>=start_coordinate.y && mouse.y<=(start_coordinate.y+start_size.y) ) )  {
-//
-//           start_click_signal = 1;
-//        }
-//        else start_click_signal = 0;
-//    }
-//
-//    if(MOUSE == Left_Up && (mouse.x>=start_coordinate.x && mouse.x<=(start_coordinate.x+start_size.x))
-//       && (mouse.y>=start_coordinate.y && mouse.y<=(start_coordinate.y+start_size.y))) {
-//
-//            if(start_click_signal == 1) {
-//                start_click_signal = 0;
-//                ingame = 1;
-//                cout<<mouse.x<<' '<<mouse.y<<endl;
-//            }
-//    }
 //
 //    /**click in QUIT button */
-//    if(MOUSE == Left_Down) {
-//        if( ( mouse.x>=quit_coordinate.x && mouse.x<=(quit_coordinate.x+quit_size.x) )
-//          &&( mouse.y>=quit_coordinate.y && mouse.y<=(quit_coordinate.y+quit_size.y) ) )  {
-//
-//           quit_click_signal = 1;
-//        }
-//        else quit_click_signal = 0;
-//    }
-//
-//    if(MOUSE == Left_Up && (mouse.x>=quit_coordinate.x && mouse.x<=(quit_coordinate.x+quit_size.x))
-//                        && (mouse.y>=quit_coordinate.y && mouse.y<=(quit_coordinate.y+quit_size.y))) {
-//
-//        if(quit_click_signal == 1) {
-//            quit_click_signal = 0;
-//            ingame = 0;
-//            running = 0;
-//            cout<<mouse.x<<' '<<mouse.y<<endl;
-//        }
-//    }
 //}
 //
 //void second_Menu::loop(SDL_Renderer *renderer, bool &ingame)
@@ -176,7 +213,6 @@ void first_Menu::render()
 //        render(renderer);
 //        input();
 //        handle_input(ingame);
-//
 //    }
 //}
 //
@@ -189,19 +225,5 @@ void first_Menu::render()
 //    SDL_SetRenderDrawColor(renderer, 0 ,0 ,0 , 255);
 //    SDL_RenderClear(renderer);
 //
-//    renderTexture(start_button, renderer, start_coordinate.x, start_coordinate.y);
-//
-//    renderTexture(quit_button, renderer, quit_coordinate.x, quit_coordinate.y);
-//
 //    SDL_RenderPresent(renderer);
-//}
-//void second_Menu::free()
-//{
-//    SDL_DestroyTexture(start_button);
-//    SDL_DestroyTexture(guide_button);
-//    SDL_DestroyTexture(quit_button);
-//    start_button=nullptr;
-//    quit_button=nullptr;
-//    guide_button=nullptr;
-//
 //}
