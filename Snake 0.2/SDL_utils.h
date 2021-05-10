@@ -11,6 +11,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 #define WIDTH_SCREEN 900
 #define HEIGHT_SCREEN 700
@@ -48,5 +49,8 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer,
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 
 void waitUntilKeyPressed();
+
+Mix_Chunk *load_SoundEffect(const string &file, const string &error_sound_type);
+Mix_Music *loadMusic(const string &file, const string &error_sound_type);
 
 #endif // SDL_UTILS_H

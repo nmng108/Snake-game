@@ -3,12 +3,19 @@
 Button::Button(SDL_Renderer *ren)
 {
    renderer = ren;
+   click_sound = load_SoundEffect("Resource/click.wav", "click");
 }
 
 Button::~Button()
 {
+    for(int i=0;i<3;i++) {
+        SDL_DestroyTexture(button_IMG[i]);
+        button_IMG[i] = NULL;
+    }
     SDL_DestroyRenderer(renderer);
     button_IMG.clear();
+    Mix_FreeChunk(click_sound);
+    click_sound = NULL;
 }
 
 void Button::draw(const string &filepath_keyword, int crd_y)
@@ -38,6 +45,7 @@ void Button::handle_input(Mouse MOUSE, SDL_Point mouse)
         else if(MOUSE==Left_Up && click_signal==true) {
             click_signal = false;
             chosen = 1;
+            Mix_PlayChannel(-1, click_sound, 0);
         }
         else click_signal = false;
     }
@@ -45,15 +53,6 @@ void Button::handle_input(Mouse MOUSE, SDL_Point mouse)
         click_signal = false;
         pointed = false;
     }
-//    if(MOUSE == Left_Up && (mouse.x>=coordinate.x && mouse.x<=(coordinate.x+Size.x))
-//       && (mouse.y>=coordinate.y && mouse.y<=(coordinate.y+Size.y))) {
-//
-//            if(click_signal == true) {
-//                click_signal = false;
-//                chosen = 1;
-//                cout<<mouse.x<<' '<<mouse.y<<endl;
-//            }
-//    }
 }
 
 void Button::render()

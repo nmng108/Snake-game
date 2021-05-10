@@ -13,22 +13,27 @@ first_Menu::first_Menu(SDL_Renderer *ren)
 first_Menu::~first_Menu()
 {
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(backgr_IMG);
+    backgr_IMG=NULL;
     delete start_button;
     delete highScore_button;
     delete quit_button;
 }
 
-void first_Menu::open(bool &run_Menu, bool &running, bool &ingame)
+void first_Menu::open(bool &run_Menu, bool &running, bool &start)
 {
-    running_Menu = run_Menu;
-    while(running_Menu) {
+    running_1stMenu = run_Menu;
+
+    while(running_1stMenu) {
         if(open_high_score_board) display_high_score_board(run_Menu, running);
         else {
             render();
             input(running);
-            handle_input(running, ingame);
+            handle_input(running, start);
         }
     }
+
+    run_Menu = running_1stMenu;
 }
 
 void first_Menu::input(bool &running)
@@ -40,14 +45,14 @@ void first_Menu::input(bool &running)
 
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
-            running_Menu = 0;
+            running_1stMenu = false;
             running = false;
-            break;
+            return;
         }
         if(event.key.keysym.sym == SDLK_ESCAPE) {
-            running_Menu = 0;
+            running_1stMenu = false;
             running = false;
-            break;
+            return;
         }
         if(event.type == SDL_MOUSEBUTTONDOWN) {
             if (event.button.button == SDL_BUTTON_LEFT) {
@@ -62,13 +67,13 @@ void first_Menu::input(bool &running)
     }
 }
 
-void first_Menu::handle_input(bool &running, bool &ingame)
+void first_Menu::handle_input(bool &running, bool &start)
 {
     /** click on Start */
     start_button->handle_input(MOUSE, mouse);
     if(start_button->chosen) {
-        ingame = true;
-        running_Menu = false;
+        start = true;
+        running_1stMenu = false;
         start_button->chosen = false;
     }
 
@@ -82,9 +87,9 @@ void first_Menu::handle_input(bool &running, bool &ingame)
     /** click on Quit */
     quit_button->handle_input(MOUSE, mouse);
     if(quit_button->chosen) {
-        ingame = false;
+        start = false;
         running = false;
-        running_Menu = false;
+        running_1stMenu = false;
         quit_button->chosen = false;
     }
 }
@@ -111,7 +116,7 @@ void first_Menu::render()
 }
 
 
-void first_Menu::process_score_log(const int &new_score)
+void first_Menu::process_score_log(const int &new_score, int &rank_sort)
 {
     fstream score_log("Resource/score_log.txt", ios::in);
     arr_score.clear();
@@ -124,31 +129,38 @@ void first_Menu::process_score_log(const int &new_score)
 
     arr_score[arr_score.size()-1]=new_score;
 
-    for(int i=0;i<arr_score.size();i++)
-        for(int j=i+1;j<arr_score.size();j++)
+    rank_sort = 0;
+    for(int i=0; i<(arr_score.size()-1); i++) {
+        if(new_score <= arr_score[i]) rank_sort++;
+    }
+
+    for(int i=0; i<arr_score.size(); i++) //delete elements which are similar to each other
+        for(int j=i+1; j<arr_score.size(); j++)
             if(arr_score[i]==arr_score[j]) arr_score.erase(arr_score.begin()+j);
 
-    for(int i=0;i<arr_score.size()-1;i++){
+    for(int i=0; i<arr_score.size()-1; i++){ //sort all elements decreasingly
         int iMax=i;
-        for(int j=i+1;j<arr_score.size();j++) if(arr_score[iMax]<arr_score[j]) iMax=j;
+        for(int j=i+1; j<arr_score.size(); j++) if(arr_score[iMax]<arr_score[j]) iMax=j;
         int tmp=arr_score[i];
         arr_score[i]=arr_score[iMax];
         arr_score[iMax]=tmp;
     }
 
-    score_log.open("Resource/score_log.txt", ios::out);
-    if(arr_score.size() > 10) arr_score.resize(10);
-    for(int i=0;i<arr_score.size();i++) score_log<<arr_score[i]<<endl;
+    if(arr_score.size() > number_of_elements) arr_score.resize(number_of_elements);
+
+    score_log.open("Resource/score_log.txt", ios::out); //write to file
+    for(int i=0; i<arr_score.size(); i++) score_log<<arr_score[i]<<endl;
     score_log.close();
 }
 
 void first_Menu::display_high_score_board(bool &run_Menu, bool &running)
 {
-    renderTexture("Resource/Image/hghScr_board.png", renderer, 0, 0);
     vector<SDL_Color> color = {{136, 0, 27, 255}, {176, 88, 105, 255}, {225, 139, 185, 255}, {207, 152, 231, 255}, {144, 132, 178, 255}};
 
+    renderTexture("Resource/Image/hghScr_board.png", renderer, 0, 0);
+
     ifstream score_log("Resource/score_log.txt");
-    arr_score.resize(5);
+    arr_score.resize(number_of_elements);
     for(int i=0; (i<5) && !score_log.eof(); i++) {
         score_log>>arr_score[i];
         renderText(to_string(arr_score[i]), color[i], "Resource/Fonts/Tekton-Pro-Bold.ttf", 48, renderer, 500, 233 + i*63);
@@ -159,13 +171,11 @@ void first_Menu::display_high_score_board(bool &run_Menu, bool &running)
     while(true)
         if(SDL_WaitEvent(&event)) {
             if(event.type == SDL_QUIT) {
-                open_high_score_board = 0;
-                running = false;
-                running_Menu = false;
+                open_high_score_board = running = running_1stMenu = false;
                 return;
             }
             if(event.type == SDL_KEYDOWN) {
-                open_high_score_board = 0;
+                open_high_score_board = false;
                 return;
             }
         }
@@ -174,56 +184,89 @@ void first_Menu::display_high_score_board(bool &run_Menu, bool &running)
 }
 
 /** second Menu */
+second_Menu::second_Menu(SDL_Renderer *ren)
+{
+    renderer = ren;
 
-//void second_Menu::input(bool &running)
-//{
-//    SDL_GetMouseState(&mouse.x, &mouse.y);
-//    SDL_Event event;
-//
-//    while(SDL_PollEvent(&event)) {
-//        if(event.type == SDL_QUIT) {
-//            running = false;
-//            break;
-//        }
-//        if(event.type == SDL_MOUSEBUTTONDOWN) {
-//            if (event.button.button == SDL_BUTTON_LEFT) {
-//                MOUSE = Left_Down;
-//            }
-//        }
-//        if(event.type == SDL_MOUSEBUTTONUP){
-//            if(event.button.button == SDL_BUTTON_LEFT) {
-//                MOUSE = Left_Up;
-//                cout<<mouse.x<<' '<<mouse.y<<endl;
-//
-//            }
-//        }
-//    }
-//}
-//
-//void second_Menu::handle_input(bool &running, bool &ingame)
-//{
-//    /**click in START button */
-//
-//    /**click in QUIT button */
-//}
-//
-//void second_Menu::loop(SDL_Renderer *renderer, bool &ingame)
-//{
-//    while(running) {
-//        render(renderer);
-//        input();
-//        handle_input(ingame);
-//    }
-//}
-//
-//void second_Menu::draw(SDL_Renderer *renderer)
-//{
-//}
-//
-//void second_Menu::render(SDL_Renderer *renderer)
-//{
-//    SDL_SetRenderDrawColor(renderer, 0 ,0 ,0 , 255);
-//    SDL_RenderClear(renderer);
-//
-//    SDL_RenderPresent(renderer);
-//}
+    resume_button = new Button(ren);
+    replay_button = new Button(ren);
+
+    draw();
+}
+second_Menu::~second_Menu()
+{
+    SDL_DestroyRenderer(renderer);
+    delete resume_button;
+    delete replay_button;
+}
+
+void second_Menu::open(bool &running, bool &start, bool &ingame)
+{
+    running_2ndMenu = 1;
+    while(running_2ndMenu) {
+        input(running, start, ingame);
+        handle_input(ingame);
+        render();
+    }
+}
+
+void second_Menu::input(bool &running, bool &start, bool &ingame)
+{
+    SDL_GetMouseState(&mouse.x, &mouse.y);
+    SDL_Event event;
+
+    event.key.keysym.sym=SDLK_UNKNOWN;
+    event.type=SDL_FIRSTEVENT;
+
+    while(SDL_PollEvent(&event)) {
+        if(event.type == SDL_QUIT) {
+            running = start = ingame = running_2ndMenu = false;
+            return;
+        }
+        if(event.type == SDL_MOUSEBUTTONDOWN) {
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                MOUSE = Left_Down;
+            }
+        }
+        if(event.type == SDL_MOUSEBUTTONUP){
+            if(event.button.button == SDL_BUTTON_LEFT) {
+                MOUSE = Left_Up;
+            }
+        }
+    }
+}
+
+void second_Menu::handle_input(bool &ingame)
+{
+    /**click on RESUME button */
+    resume_button->handle_input(MOUSE, mouse);
+    if(resume_button->chosen) {
+        running_2ndMenu = false;
+        resume_button->chosen = false;
+        return;
+    }
+    /**click on REPLAY button */
+    replay_button->handle_input(MOUSE, mouse);
+    if(replay_button->chosen) {
+        ingame = running_2ndMenu = false;
+        replay_button->chosen = false;
+        return;
+    }
+}
+
+void second_Menu::draw()
+{
+    resume_button->draw("resume", button_OG_y_crd);
+    replay_button->draw("replay", resume_button->coordinate.y + resume_button->Size.y + 30);
+}
+
+void second_Menu::render()
+{
+    SDL_SetRenderDrawColor(renderer, 0 ,0 ,0 , 255);
+    SDL_RenderClear(renderer);
+
+    resume_button->render();
+    replay_button->render();
+
+    SDL_RenderPresent(renderer);
+}

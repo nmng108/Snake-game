@@ -10,9 +10,8 @@ using namespace std;
 
 class Map { //include map, wall and fruit
     SDL_Renderer *renderer;
-    SDL_Texture *ground_Texture=nullptr,
-                *fruit_Texture=nullptr,
-                *wall_Texture=nullptr;
+    SDL_Texture *fruit_Texture=NULL,
+                *wall_Texture=NULL;
 
     vector<string> list_of_Maps;
 public:
@@ -30,6 +29,7 @@ public:
     void draw();
     void render();
     void display_score(int score);
+    void free();
 //    vector<vector<object>> show_in_2Darray(snake SNAKE); //take fruit, snake::body+HEAD,
 };
 

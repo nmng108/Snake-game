@@ -19,6 +19,7 @@ class Button
         vector<SDL_Texture*> button_IMG;
         bool click_signal = 0,
              pointed = 0;
+        Mix_Chunk *click_sound = NULL;
     public:
         Button(SDL_Renderer *ren);
         ~Button();

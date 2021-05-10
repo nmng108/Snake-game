@@ -8,22 +8,26 @@
 using namespace std;
 
 class Game {
-    string WINDOW_TITLE = "Classic Snake -  by Nguyen Hai Nam";
+    string WINDOW_TITLE = "Classic Snake - made with SDL2 by Nguyen Hai Nam";
     SDL_Window *window;
     SDL_Renderer *renderer;
 
     first_Menu* stMenu = nullptr;
+    second_Menu* ndMenu = nullptr;
     entity *SNAKE = nullptr;
     Map *MAP = nullptr;
 
-    const double FPS = 7;
+    double FPS = 7;
 
     SDL_Event event;
 
-    bool ingame = 0, running = 1, run_Menu = 1;
-    bool endgame_signal = 0, win=0, game_continue = 1;
+    Mix_Music *lose_Sound = NULL,
+              *win_Sound = NULL;
 
-    void ingame_loop(int &level);
+    bool ingame = 0, running = 1, run_Menu = 1;
+    bool win=0, start = 0, pause = 0;
+
+    void ingame_loop();
     void update(int &level);
     void render();
     void input();

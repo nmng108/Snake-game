@@ -58,6 +58,7 @@ void renderText(const string &msg, SDL_Color color, const string &ttf_file, int 
     SDL_FreeSurface(suf);
     SDL_RenderCopy(ren, tex, NULL, &rect);
     SDL_DestroyTexture(tex);
+    tex = NULL;
 }
 
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h, int angle)
@@ -81,15 +82,21 @@ void renderTexture(const string &file, SDL_Renderer *ren, int x, int y)
 
 	SDL_RenderCopy(ren, tex, NULL, &dst);
 	SDL_DestroyTexture(tex);
+	tex = NULL;
 }
 
-//void render_a_part_of_Texture(SDL_Texture *tex, SDL_Renderer *ren, int src_x, int src_y, SDL_Rect dst)
-//{
-//
-//	SDL_Rect src;
-//	src.x = src_x;
-//	src.y = src_y;
-//	SDL_QueryTexture(tex, NULL, NULL, &src.w, &src.h);
-//
-//	SDL_RenderCopy(ren, tex, &src, &dst);
-//}
+
+void renderTexture(const string &file, SDL_Renderer *ren, int x, int y, int w, int h, int angle)
+{
+    SDL_Texture *tex=loadTexture(file, ren);
+	SDL_Rect dest;
+	dest.x = x;
+	dest.y = y;
+    dest.w = w;
+    dest.h = h;
+//    SDL_SetTextureAlphaMod( tex,100);
+
+	SDL_RenderCopyEx(ren, tex, NULL, &dest, angle, nullptr, SDL_FLIP_NONE);
+	SDL_DestroyTexture(tex);
+	tex = NULL;
+}

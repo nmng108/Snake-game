@@ -14,11 +14,6 @@ Map::Map(SDL_Renderer *ren)
 }
 Map::~Map()
 {
-//    SDL_DestroyTexture(ground_Texture);
-//    SDL_DestroyTexture(fruit_Texture);
-//    SDL_DestroyTexture(wall_Texture);
-    SDL_DestroyRenderer(renderer);
-    list_of_Maps.clear();
 }
 void Map::create_Map(int mapList_index)
 {
@@ -70,14 +65,12 @@ void Map::display_score(int score)
 
 void Map::draw()
 {
-//    ground_Texture=loadTexture("Resource/Image/grass.png", renderer);
     wall_Texture=loadTexture("Resource/Image/block.jpg", renderer);
     fruit_Texture=loadTexture("Resource/Image/snake2/apple-removebg.png", renderer);
 }
 
 void Map::render()
 {
-//    renderTexture(MAP->ground_Texture, renderer, 0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-100);
     for(long unsigned int i=0;i<base_Array.size();i++){
         for(long unsigned int j=0;j<base_Array[0].size();j++) {
             if(base_Array[i][j]==Wall) renderTexture(wall_Texture, renderer, j*CELL_side, i*CELL_side, CELL_side, CELL_side);
@@ -86,4 +79,13 @@ void Map::render()
     }
     SDL_SetRenderDrawColor(renderer, 0, 48, 200, 255);
     SDL_RenderDrawLine(renderer, 0, 600, 900, 600);
+}
+
+void Map::free()
+{
+    SDL_DestroyRenderer(renderer);
+//    list_of_Maps.clear();
+    SDL_DestroyTexture(fruit_Texture);
+    SDL_DestroyTexture(wall_Texture);
+    fruit_Texture = wall_Texture = NULL;
 }

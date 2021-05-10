@@ -30,6 +30,8 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer,
     SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
 
     TTF_Init();
+
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) logSDLError(cout, "mixer init", true);
 }
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
@@ -37,6 +39,7 @@ void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
     TTF_Quit();
+    Mix_Quit();
 	SDL_Quit();
 }
 
@@ -51,5 +54,16 @@ void waitUntilKeyPressed()
     }
 }
 
+Mix_Chunk *load_SoundEffect(const string &file, const string &error_sound_type)
+{
+    Mix_Chunk *sound=NULL;
+    sound = Mix_LoadWAV(file.c_str());
+    if(sound == NULL) cout<<"Failed to load "<<error_sound_type<<" sound! Mixer Error: \n"<<Mix_GetError()<<endl;
+}
 
-
+Mix_Music *loadMusic(const string &file, const string &error_sound_type)
+{
+    Mix_Music *sound=NULL;
+    sound = Mix_LoadMUS(file.c_str());
+    if(sound == NULL) cout<<"Failed to load "<<error_sound_type<<" sound! Mixer Error: \n"<<Mix_GetError()<<endl;
+}

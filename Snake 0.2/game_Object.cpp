@@ -1,4 +1,5 @@
 #include "game_Object.h"
+
                         /**  class snake  */
 bool snake::eatFruit(SDL_Point fruit) //runs before move() and both run before updating base_Map
 {
@@ -6,6 +7,10 @@ bool snake::eatFruit(SDL_Point fruit) //runs before move() and both run before u
 
     if(body[0].x==fruit.x && body[0].y==fruit.y) {
         body.resize(body.size()+1);
+        score++;
+
+        Mix_PlayChannel(-1, eat_Sound, 0);
+
         return true;
     }
     return false;
@@ -113,10 +118,16 @@ void snake::Move()
 
 bool snake::CRASH(vector<vector<int>> Map)
 {
-    if(Map[body[0].y][body[0].x] == Wall) return 1;
+    if(Map[body[0].y][body[0].x] == Wall) {
+        Mix_PlayChannel(-1, crash_Sound, 0);
+        return 1;
+    }
 
     for(int i=1;i<body.size();i++) {
-        if(body[0].x==body[i].x && body[0].y==body[i].y) return 1;
+        if(body[0].x==body[i].x && body[0].y==body[i].y) {
+            Mix_PlayChannel(-1, crash_Sound, 0);
+            return 1;
+        }
     }
 //    if(Map[body[0].y][body[0].x]==Wall || Map[body[0].y][body[0].x]==Snake) return 1;
 
@@ -135,7 +146,7 @@ void snake::reset()
 
 bool snake::levelup()
 {
-    if( body.size() == (2+score_needed_to_pass_aLevel) ) {
+    if( body.size() == (2+score_needed_to_pass_a_Level) ) {
         int tmp_score=score;
         reset();
         score=tmp_score;
@@ -146,32 +157,37 @@ bool snake::levelup()
 }
 
                         /**  class entity  */
-entity::~entity()
+entity::entity(SDL_Renderer *ren)
 {
-//    for(int i=0;i<img_HEAD.size();i++) SDL_DestroyTexture(img_HEAD[i]); //cause to disappear snake's head ??
-    img_HEAD.clear();
-//    SDL_DestroyTexture (img_bend);
-//    SDL_DestroyTexture (img_BODY);
-//    SDL_DestroyTexture (img_tail);
-    img_BODY=nullptr,
-    img_tail=nullptr,
-    img_bend=nullptr;
-//    SDL_DestroyRenderer(renderer);
+    renderer = ren;
+//    draw();
+    reset();
+    eat_Sound = load_SoundEffect("Resource/eat.wav", "eat");
+    crash_Sound = load_SoundEffect("Resource/crash.wav", "Crash sound");
 }
 
-void entity::draw() {
-    while(img_HEAD.size()<3) {
-        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2.png", renderer));
-        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2z.png", renderer));
-        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2zz.png", renderer));
-    }
-    if(img_bend==nullptr||img_BODY==nullptr||img_tail==nullptr) {
-        img_BODY = loadTexture("Resource/Image/Snake2/body.png", renderer);
-        img_bend = loadTexture("Resource/Image/Snake2/change_direction.png", renderer);
-        img_tail = loadTexture("Resource/Image/Snake2/tail.png", renderer);
-    }
+//entity::~entity()
+//{
+//}
+
+void entity::free()
+{
+    Mix_FreeChunk(eat_Sound);
+    Mix_FreeChunk(crash_Sound);
+    eat_Sound = crash_Sound = NULL;
+    SDL_DestroyRenderer(renderer);
 }
 
+//void entity::draw() {
+//    while(img_HEAD.size()<3) {
+//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2.png", renderer));
+//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2z.png", renderer));
+//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2zz.png", renderer));
+//    }
+//    img_BODY = loadTexture("Resource/Image/Snake2/body.png", renderer);
+//    img_bend = loadTexture("Resource/Image/Snake2/change_direction.png", renderer);
+//    img_tail = loadTexture("Resource/Image/Snake2/tail.png", renderer);
+//}
 
 void entity::rotate_body()
 {
@@ -208,19 +224,44 @@ void entity::render()
     rotate_body();
 
     tmp_index = (tmp_index+1)%3;
-
-    renderTexture(img_HEAD[tmp_index], renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
+    switch(tmp_index)
+    {
+        case 0: render_HEAD_0(); break;
+        case 1: render_HEAD_1(); break;
+        case 2: render_HEAD_2(); break;
+    }
 
     for(int i=1;i<body.size();i++) {
 
+        if(i==body.size()-1) render_tail();
 
-        if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        else if(body[i].turning==true) render_bendCELL(i);
 
-        else if(body[i].turning==true) renderTexture(img_bend, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
-
-        else renderTexture(img_BODY, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+        else render_body(i);
     }
 }
 
-
-
+void entity::render_body(int i)
+{
+    renderTexture("Resource/Image/Snake2/body.png", renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+}
+void entity::render_bendCELL(int i)
+{
+    renderTexture("Resource/Image/Snake2/change_direction.png", renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
+}
+void entity::render_tail()
+{
+    renderTexture("Resource/Image/Snake2/tail.png", renderer, body[body.size()-1].x*CELL_side, body[body.size()-1].y*CELL_side, CELL_side, CELL_side, body[body.size()-1].angle);
+}
+void entity::render_HEAD_0()
+{
+    renderTexture("Resource/Image/Snake2/head2.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
+}
+void entity::render_HEAD_1()
+{
+    renderTexture("Resource/Image/Snake2/head2z.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
+}
+void entity::render_HEAD_2()
+{
+    renderTexture("Resource/Image/Snake2/head2zz.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
+}

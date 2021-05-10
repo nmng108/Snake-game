@@ -4,61 +4,70 @@ Game::Game()
 {
     initSDL(window, renderer, WIDTH_SCREEN, HEIGHT_SCREEN, WINDOW_TITLE.c_str());
     stMenu = new first_Menu(renderer);
+    ndMenu = new second_Menu(renderer);
     MAP = new Map (renderer);
     SNAKE = new entity(renderer);
+
+    lose_Sound = loadMusic("Resource/negative_tone.wav", "Game losing music");
+    win_Sound = loadMusic("Resource/win.wav", "Game winning music");
 }
 Game::~Game()
 {
     quitSDL(window, renderer);
-//    delete MAP; //cause error when closing program
+    MAP->free();
     delete stMenu;
-    delete SNAKE;
+    delete ndMenu;
+    SNAKE->free();
+//    delete SNAKE;
+
+    Mix_FreeMusic(lose_Sound);
+    Mix_FreeMusic(win_Sound);
+    lose_Sound = win_Sound = NULL;
 }
 
 void Game::loop()
 {
     while(running) {
-        int level = 0;
-        stMenu->open(run_Menu, running, ingame);
+        stMenu->open(run_Menu, running, start);
 
-        ingame_loop(level);
+        ingame_loop();
 
         after_game();
     }
 }
 
-void Game::ingame_loop(int &level)
+void Game::ingame_loop()
 {
-    reset();
-    if(running) display_level(level+1);
-    while(ingame) {
-        int start_time=SDL_GetTicks();
+    while(start) {
+        reset();
+        ingame = 1;
+        int level = 0;
+        display_level(level+1);
 
-        if(SNAKE->levelup()) {
-            if( (++level) == MAP->number_of_maps) {
-                win = true;
-                ingame = false;
-                endgame_signal = 1;
-                return;
-            }
+        while(ingame) {
+            Uint32 start_time=SDL_GetTicks();
+
+            input();
+
+            if(pause) ndMenu->open(running, start, ingame);
+
+            update(level);
+
+            render();
+
+            Uint32 time_loop=SDL_GetTicks() - start_time;
+            if(time_loop<(1000/FPS)) SDL_Delay( (1000/FPS)-time_loop );
         }
-
-        input();
-        update(level);
-        render();
-
-        int time_loop=SDL_GetTicks() - start_time;
-        if(time_loop<(1000/FPS)) SDL_Delay( (1000/FPS)-time_loop );
     }
-
 }
 
 void Game::input()
 {
+    const Uint8 *keystates = SDL_GetKeyboardState(NULL);
+
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
-            ingame = 0;
-            running = 0;
+            running = start = ingame = 0;
             break;
         }
         if(event.type == SDL_KEYDOWN) {
@@ -71,39 +80,49 @@ void Game::input()
                 case SDLK_a: SNAKE->DIRECTION = Left; cout<<"left\n"; break;
                 case SDLK_RIGHT: SNAKE->DIRECTION = Right; cout<<"right\n"; break;
                 case SDLK_d: SNAKE->DIRECTION = Right; cout<<"right\n"; break;
-                case SDLK_ESCAPE: ingame=0; cout<<"11\n"; break;
+                case SDLK_ESCAPE: SNAKE->DIRECTION = Freeze; pause = true; cout<<"pause\n"; break;
+                case SDLK_SPACE: SNAKE->DIRECTION = Freeze; pause = true; cout<<"pause\n"; break;
                 default: break;
             }
         }
-//        SNAKE->Move();
+        if(event.key.repeat) FPS=11;
+        else FPS=7;
     }
+
+    if(keystates[SDL_SCANCODE_LEFT] || keystates[SDL_SCANCODE_A]) SNAKE->DIRECTION = Left;
+    if(keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_D]) SNAKE->DIRECTION = Right;
+    if(keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_S])SNAKE->DIRECTION = Down;
+    if(keystates[SDL_SCANCODE_UP] || keystates[SDL_SCANCODE_W]) SNAKE->DIRECTION = Up;
 }
 void Game::update(int &level)
 {
+    pause = 0;
+
     MAP->create_Map(level);
 
     if(SNAKE->eatFruit(MAP->fruit) ) {
         MAP->getFruit(*SNAKE);
-        ++SNAKE->score;
+    }
+
+    if(SNAKE->levelup()) {
+        if( (++level) == MAP->number_of_maps) {
+            win = true;
+            ingame = start = false;
+            return;
+        }
+        else {
+            display_level(level+1);
+            MAP->create_Map(level);
+            MAP->getFruit(*SNAKE);
+        }
     }
 
     SNAKE->Move();
 
     if(SNAKE->CRASH(MAP->base_Array)) {
-        ingame = false;
-        endgame_signal = 1;
-        cout<<"end\n";
+        ingame = start = false;
         return;
     }
-
-    if(SNAKE->levelup()) {
-
-        if((++level) != MAP->number_of_maps) {
-            display_level(level+1);
-            MAP->getFruit(*SNAKE);
-        }
-    }
-
 
     if(MAP->base_Array[MAP->fruit.y][MAP->fruit.x] == Wall) MAP->getFruit(*SNAKE);
     MAP->base_Array[MAP->fruit.y][MAP->fruit.x] = Fruit;
@@ -113,7 +132,7 @@ void Game::update(int &level)
 
 void Game::render()
 {
-    if(endgame_signal==1) {
+    if(ingame==0) {
 //        if(win) renderTexture("Resource/Image/game win.png", renderer, 0, 0);
         return;
     }
@@ -132,18 +151,18 @@ void Game::reset()
 {
     SNAKE->reset();
     MAP->getFruit(*SNAKE);
-    endgame_signal = win = 0;
+    win = false;
 }
 
 void Game::after_game()
 {
     if(running==false) return;
 
-    stMenu->process_score_log(SNAKE->score);
+    int rank_sort;
 
-        run_Menu=false;
+    stMenu->process_score_log(SNAKE->score, rank_sort);
 
-    for(int i=0;i<60;i++) {
+    for(Uint8 i=0;i<60;i++) {
         int s=SDL_GetTicks();
 
         SDL_Color cr={236, 28, 36, 5+i*2};
@@ -168,17 +187,30 @@ void Game::after_game()
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    if(!win) renderTexture("Resource/Image/game lose.png", renderer, 0, 0); //add game winning screen
-    else renderTexture("Resource/Image/game win.png", renderer, 0, 0);
+    if(!win) {
+        renderTexture("Resource/Image/game lose.png", renderer, 0, 0); //add game winning screen
+        if(!Mix_PlayingMusic()) Mix_PlayMusic(lose_Sound, 0);
+    }
+    else {
+        renderTexture("Resource/Image/game win.png", renderer, 0, 0);
+        if(!Mix_PlayingMusic()) Mix_PlayMusic(win_Sound, 0);
+    }
 
     string font="Resource/Fonts/itckrist.ttf";
     SDL_Color color = {229, 156, 108, 255};
-    string tmp = "Your score is " + to_string(SNAKE->score);
-    SDL_Texture *sc=loadTexture_text(tmp, color, font, 40, renderer);
+    SDL_Texture *sc=loadTexture_text("Your score is " + to_string(SNAKE->score), color, font, 45, renderer);
     SDL_Point dst;
     SDL_QueryTexture(sc, NULL, NULL, &dst.x, &dst.y);
-    renderTexture(sc, renderer, (WIDTH_SCREEN-dst.x)/2, 400);
+    renderTexture(sc, renderer, (WIDTH_SCREEN-dst.x)/2, 380);
     SDL_DestroyTexture(sc);
+    sc=NULL;
+
+    switch(rank_sort)
+    {
+        case 0: renderTexture("Resource/Image/1st.png", renderer, 620, 360, 75, 75, 0); break;
+        case 1: renderTexture("Resource/Image/2nd.png", renderer, 620, 360, 75, 75, 0); break;
+        case 2: renderTexture("Resource/Image/3th.png", renderer, 620, 360, 75, 75, 0); break;
+    }
 
     SDL_RenderPresent(renderer);
 
@@ -191,6 +223,7 @@ void Game::after_game()
             }
             if(event.type == SDL_KEYDOWN) {
                 run_Menu = true;
+                if(Mix_PlayingMusic()) Mix_HaltMusic();
                 return;
             }
         }
@@ -215,13 +248,13 @@ void Game::display_level(int const level)
         event.type=SDL_FIRSTEVENT;
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_QUIT) {
-                running = false;
+                running = ingame = false;
                 return;
             }
         }
 
         int time_loop=SDL_GetTicks() - s;
-        if(time_loop<20) SDL_Delay(20-time_loop);
+        if(time_loop<25) SDL_Delay(25-time_loop);
     }
 }
 
