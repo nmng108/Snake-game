@@ -14,7 +14,7 @@ Game::Game()
 Game::~Game()
 {
     quitSDL(window, renderer);
-//    delete MAP; //causes error when closing the program
+    delete MAP; //causes error when closing the program
     delete stMenu;
     delete ndMenu;
     delete SNAKE;
