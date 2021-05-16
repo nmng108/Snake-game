@@ -7,6 +7,8 @@ first_Menu::first_Menu(SDL_Renderer *ren)
     start_button = new Button(ren);
     highScore_button = new Button(ren);
     quit_button = new Button(ren);
+    rankReset_button = new Button(ren);
+    back_button  = new Button(ren);
     draw();
 }
 
@@ -18,6 +20,8 @@ first_Menu::~first_Menu()
     delete start_button;
     delete highScore_button;
     delete quit_button;
+    delete rankReset_button;
+    delete back_button;
 }
 
 void first_Menu::open(bool &run_Menu, bool &running, bool &start)
@@ -25,12 +29,14 @@ void first_Menu::open(bool &run_Menu, bool &running, bool &start)
     running_1stMenu = run_Menu;
 
     while(running_1stMenu) {
+        input(running);
+
+        handle_input(running, start);
+
         if(open_high_score_board) display_high_score_board(run_Menu, running);
-        else {
-            render();
-            input(running);
-            handle_input(running, start);
-        }
+        open_high_score_board = false;
+
+        render();
     }
 
     run_Menu = running_1stMenu;
@@ -39,9 +45,6 @@ void first_Menu::open(bool &run_Menu, bool &running, bool &start)
 void first_Menu::input(bool &running)
 {
     SDL_GetMouseState(&mouse.x, &mouse.y);
-
-    event.key.keysym.sym=SDLK_UNKNOWN;
-    event.type=SDL_FIRSTEVENT;
 
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) {
@@ -101,6 +104,8 @@ void first_Menu::draw()
     start_button->draw("start", button_OG_y_crd);
     highScore_button->draw("highScore", (start_button->coordinate.y + start_button->Size.y + 30));
     quit_button->draw("quit", (highScore_button->coordinate.y + highScore_button->Size.y + 30));
+    rankReset_button->draw("reset_rank", 558);
+    back_button->draw("back", 610);
 }
 
 void first_Menu::render()
@@ -146,7 +151,7 @@ void first_Menu::process_score_log(const int &new_score, int &rank_sort)
         arr_score[iMax]=tmp;
     }
 
-    if(arr_score.size() > number_of_elements) arr_score.resize(number_of_elements);
+    if(arr_score.size() > number_of_score_elements) arr_score.resize(number_of_score_elements);
 
     score_log.open("Resource/score_log.txt", ios::out); //write to file
     for(int i=0; i<arr_score.size(); i++) score_log<<arr_score[i]<<endl;
@@ -157,29 +162,49 @@ void first_Menu::display_high_score_board(bool &run_Menu, bool &running)
 {
     vector<SDL_Color> color = {{136, 0, 27, 255}, {176, 88, 105, 255}, {225, 139, 185, 255}, {207, 152, 231, 255}, {144, 132, 178, 255}};
 
-    renderTexture("Resource/Image/hghScr_board.png", renderer, 0, 0);
+    while(true) {
+        renderTexture("Resource/Image/Menu/hghScr_board.png", renderer, 0, 0);
 
-    ifstream score_log("Resource/score_log.txt");
-    arr_score.resize(number_of_elements);
-    for(int i=0; (i<5) && !score_log.eof(); i++) {
-        score_log>>arr_score[i];
-        renderText(to_string(arr_score[i]), color[i], "Resource/Fonts/Tekton-Pro-Bold.ttf", 48, renderer, 500, 233 + i*63);
-    }
-    score_log.close();
+        fstream score_log("Resource/score_log.txt", ios::in);
+        arr_score.resize(number_of_score_elements);
+        for(int i=0; i<number_of_score_elements; i++) {
 
-    SDL_RenderPresent(renderer);
-    while(true)
-        if(SDL_WaitEvent(&event)) {
-            if(event.type == SDL_QUIT) {
-                open_high_score_board = running = running_1stMenu = false;
-                return;
+            if(!score_log.eof()) {
+                score_log>>arr_score[i];
+                renderText(to_string(arr_score[i]), color[i], "Resource/Fonts/Tekton-Pro-Bold.ttf", 48, renderer, 500, 233 + i*63);
             }
-            if(event.type == SDL_KEYDOWN) {
-                open_high_score_board = false;
-                return;
+            else {
+                arr_score[i] = 0;
+                renderText(to_string(arr_score[i]), color[i], "Resource/Fonts/Tekton-Pro-Bold.ttf", 48, renderer, 500, 233 + i*63);
             }
         }
+        score_log.close();
 
+        input(running);
+        if(event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) return;
+
+        rankReset_button->handle_input(MOUSE, mouse);
+        if(rankReset_button->chosen) {
+            arr_score.assign(number_of_score_elements, 0);
+
+            score_log.open("Resource/score_log.txt", ios::out);
+            for(int i=0; i<number_of_score_elements; i++) score_log<<0<<endl;
+            score_log.close();
+
+            rankReset_button->chosen = false;
+        }
+
+        back_button->handle_input(MOUSE, mouse);
+        if(back_button->chosen) {
+            back_button->chosen = false;
+            return;
+        }
+
+        rankReset_button->render();
+        back_button->render();
+
+        SDL_RenderPresent(renderer);
+    }
 
 }
 
@@ -213,7 +238,6 @@ void second_Menu::open(bool &running, bool &start, bool &ingame)
 void second_Menu::input(bool &running, bool &start, bool &ingame)
 {
     SDL_GetMouseState(&mouse.x, &mouse.y);
-    SDL_Event event;
 
     event.key.keysym.sym=SDLK_UNKNOWN;
     event.type=SDL_FIRSTEVENT;
@@ -233,6 +257,11 @@ void second_Menu::input(bool &running, bool &start, bool &ingame)
                 MOUSE = Left_Up;
             }
         }
+        if(event.type == SDL_KEYDOWN)
+            if(event.key.keysym.sym == SDLK_ESCAPE || event.key.keysym.sym == SDLK_SPACE) {
+            running_2ndMenu = false;
+            return;
+            }
     }
 }
 

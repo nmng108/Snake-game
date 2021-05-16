@@ -37,7 +37,8 @@ enum object
     Snake=1,
     SnakeHEAD=2,
     Fruit=3,
-    Wall=4
+    Wall=4,
+    Gift=5
 };
 
 void logSDLError(std::ostream& os,

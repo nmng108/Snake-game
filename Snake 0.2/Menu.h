@@ -22,6 +22,8 @@ class first_Menu: public base_Menu
         Button *start_button = nullptr;
         Button *quit_button = nullptr;
         Button *highScore_button = nullptr;
+        Button *rankReset_button = nullptr;
+        Button *back_button = nullptr;
 
         int button_OG_y_crd = 270; //optional original y coordinate for the highest button
         vector<int> arr_score;
@@ -40,7 +42,7 @@ class first_Menu: public base_Menu
         void process_score_log(const int &new_score, int &rank_sort);
         void display_high_score_board(bool &run_Menu, bool &running);
         bool open_high_score_board=0;
-        const int number_of_elements = 5;
+        const int number_of_score_elements = 5;
 };
 
 class second_Menu: public base_Menu

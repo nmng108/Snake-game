@@ -8,7 +8,7 @@
 using namespace std;
 
 class Game {
-    string WINDOW_TITLE = "Classic Snake - made with SDL2 by Nguyen Hai Nam";
+    string WINDOW_TITLE = "Snake Game - made with SDL2 by Nguyen Hai Nam";
     SDL_Window *window;
     SDL_Renderer *renderer;
 
@@ -17,7 +17,8 @@ class Game {
     entity *SNAKE = nullptr;
     Map *MAP = nullptr;
 
-    double FPS = 7;
+    double FPS = 7; //considered as snake's velocity, change to 11 when press & hold moving key
+    int level = 0;
 
     SDL_Event event;
 
@@ -28,11 +29,11 @@ class Game {
     bool win=0, start = 0, pause = 0;
 
     void ingame_loop();
-    void update(int &level);
+    void update();
     void render();
     void input();
     void reset();
-    void display_level(int const level);
+    void display_level();
     void after_game();
 
 public:

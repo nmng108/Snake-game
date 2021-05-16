@@ -1,13 +1,28 @@
 #include "game_Object.h"
 
                         /**  class snake  */
-bool snake::eatFruit(SDL_Point fruit) //runs before move() and both run before updating base_Map
+bool snake::eatFood(SDL_Point fruit, bool &fruit_eaten, SDL_Point gift, bool &gift_eaten, Uint32 Gift_start_time) //runs before move() and both run before updating base_Map
 {
     if(DIRECTION==Freeze) return false;
 
     if(body[0].x==fruit.x && body[0].y==fruit.y) {
         body.resize(body.size()+1);
+        body[body.size()-1] = prev_pos;
         score++;
+        fruit_eaten = true;
+
+        Mix_PlayChannel(-1, eat_Sound, 0);
+
+        return true;
+    }
+
+    if(body[0].x==gift.x && body[0].y==gift.y) {
+        int gift_time = SDL_GetTicks()-Gift_start_time;
+        if(gift_time >= 2000) score+= 1;
+        else if(gift_time >= 1000) score+= 2;
+        else score+= 3;
+
+        gift_eaten = true;
 
         Mix_PlayChannel(-1, eat_Sound, 0);
 
@@ -17,7 +32,7 @@ bool snake::eatFruit(SDL_Point fruit) //runs before move() and both run before u
 }
 void snake::Move()
 {
-    POS_n_DIR prev_pos={body[0].x, body[0].y};
+    prev_pos={body[0].x, body[0].y};
 
     if(DIRECTION==Left && old_DIRECTION==Freeze) DIRECTION=Freeze;
 
@@ -108,9 +123,9 @@ void snake::Move()
     }
 
     for(int i=1;i<body.size();i++) {
-        POS_n_DIR tmp_point = body[i];
+        Pos_n_Dir tmp_point = body[i];
         body [i] = prev_pos;
-        prev_pos = tmp_point;
+        prev_pos = tmp_point; //variable "prev_pos" now save position of tail in previous frame. We can use it in function "eatFood()"
     }
 
     old_DIRECTION=DIRECTION;
@@ -160,63 +175,63 @@ bool snake::levelup()
 entity::entity(SDL_Renderer *ren)
 {
     renderer = ren;
-//    draw();
+    draw();
     reset();
     eat_Sound = load_SoundEffect("Resource/eat.wav", "eat");
     crash_Sound = load_SoundEffect("Resource/crash.wav", "Crash sound");
 }
 
-//entity::~entity()
-//{
-//}
+entity::~entity()
+{
+    free();
+}
 
 void entity::free()
 {
     Mix_FreeChunk(eat_Sound);
     Mix_FreeChunk(crash_Sound);
     eat_Sound = crash_Sound = NULL;
+
     SDL_DestroyRenderer(renderer);
+    for(int i=0; i<3;i++) {
+        SDL_DestroyTexture(img_HEAD[i]);
+        img_HEAD[i] = NULL;
+    }
+    SDL_DestroyTexture(img_bend);
+    img_bend = NULL;
+    SDL_DestroyTexture(img_BODY);
+    img_BODY = NULL;
+    SDL_DestroyTexture(img_tail);
+    img_tail = NULL;
 }
 
-//void entity::draw() {
-//    while(img_HEAD.size()<3) {
-//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2.png", renderer));
-//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2z.png", renderer));
-//        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2zz.png", renderer));
-//    }
-//    img_BODY = loadTexture("Resource/Image/Snake2/body.png", renderer);
-//    img_bend = loadTexture("Resource/Image/Snake2/change_direction.png", renderer);
-//    img_tail = loadTexture("Resource/Image/Snake2/tail.png", renderer);
-//}
+void entity::draw() {
+    while(img_HEAD.size()<3) {
+        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2.png", renderer));
+        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2z.png", renderer));
+        img_HEAD.push_back(loadTexture("Resource/Image/Snake2/head2zz.png", renderer));
+    }
+    img_BODY = loadTexture("Resource/Image/Snake2/body.png", renderer);
+    img_bend = loadTexture("Resource/Image/Snake2/change_direction.png", renderer);
+    img_tail = loadTexture("Resource/Image/Snake2/tail.png", renderer);
+}
 
 void entity::rotate_body()
 {
-    for(int i=1;i<body.size()-1 && body[i].turning != true;i++) { //for all
+    for(int i=1;i<body.size()-1 && body[i].turning != true;i++) { //for all except tail
         if(body[i].direction==Right) body[i].angle=90;
         if(body[i].direction==Left) body[i].angle=270;
         if(body[i].direction==Up) body[i].angle=0;
         if(body[i].direction==Down) body[i].angle=180;
-
     }
 //tail:
-//    if(body[body.size()-1].turning == true) {
-        switch (body[body.size()-1].direction)
-        {
-            case Down: body[body.size()-1].angle = 180; break;
-            case Up: body[body.size()-1].angle = 0; break;
-            case Left: body[body.size()-1].angle = 270; break;
-            case Right: body[body.size()-1].angle = 90; break;
-        }
-//    }
-//    else {
-//        switch (body[body.size()-1].direction)
-//        {
-//            case Down: body[body.size()-1].angle = 180; break;
-//            case Up: body[body.size()-1].angle = 0; break;
-//            case Left: body[body.size()-1].angle = 270; break;
-//            case Right: body[body.size()-1].angle = 90; break;
-//        }
-//    }
+    switch (body[body.size()-1].direction)
+    {
+        case Down: body[body.size()-1].angle = 180; break;
+        case Up: body[body.size()-1].angle = 0; break;
+        case Left: body[body.size()-1].angle = 270; break;
+        case Right: body[body.size()-1].angle = 90; break;
+    }
 }
 
 void entity::render()
@@ -224,44 +239,15 @@ void entity::render()
     rotate_body();
 
     tmp_index = (tmp_index+1)%3;
-    switch(tmp_index)
-    {
-        case 0: render_HEAD_0(); break;
-        case 1: render_HEAD_1(); break;
-        case 2: render_HEAD_2(); break;
-    }
+
+    renderTexture(img_HEAD[tmp_index], renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle );
 
     for(int i=1;i<body.size();i++) {
 
-        if(i==body.size()-1) render_tail();
+        if(i==body.size()-1) renderTexture(img_tail, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
-        else if(body[i].turning==true) render_bendCELL(i);
+        else if(body[i].turning==true) renderTexture(img_bend, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
 
-        else render_body(i);
+        else renderTexture(img_BODY, renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
     }
-}
-
-void entity::render_body(int i)
-{
-    renderTexture("Resource/Image/Snake2/body.png", renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
-}
-void entity::render_bendCELL(int i)
-{
-    renderTexture("Resource/Image/Snake2/change_direction.png", renderer, body[i].x*CELL_side, body[i].y*CELL_side, CELL_side, CELL_side, body[i].angle);
-}
-void entity::render_tail()
-{
-    renderTexture("Resource/Image/Snake2/tail.png", renderer, body[body.size()-1].x*CELL_side, body[body.size()-1].y*CELL_side, CELL_side, CELL_side, body[body.size()-1].angle);
-}
-void entity::render_HEAD_0()
-{
-    renderTexture("Resource/Image/Snake2/head2.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
-}
-void entity::render_HEAD_1()
-{
-    renderTexture("Resource/Image/Snake2/head2z.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
-}
-void entity::render_HEAD_2()
-{
-    renderTexture("Resource/Image/Snake2/head2zz.png", renderer, body[0].x*CELL_side, body[0].y*CELL_side, CELL_side, CELL_side,body[0].angle);
 }

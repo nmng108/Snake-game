@@ -14,11 +14,10 @@ Game::Game()
 Game::~Game()
 {
     quitSDL(window, renderer);
-    MAP->free();
+//    delete MAP; //causes error when closing the program
     delete stMenu;
     delete ndMenu;
-    SNAKE->free();
-//    delete SNAKE;
+    delete SNAKE;
 
     Mix_FreeMusic(lose_Sound);
     Mix_FreeMusic(win_Sound);
@@ -40,9 +39,7 @@ void Game::ingame_loop()
 {
     while(start) {
         reset();
-        ingame = 1;
-        int level = 0;
-        display_level(level+1);
+        display_level();
 
         while(ingame) {
             Uint32 start_time=SDL_GetTicks();
@@ -50,10 +47,26 @@ void Game::ingame_loop()
             input();
 
             if(pause) ndMenu->open(running, start, ingame);
+            pause = 0;
 
-            update(level);
+            update();
 
             render();
+
+            if(SNAKE->levelup()) {
+
+                MAP->GIFT->position={18, 0};
+
+                if( (++level) == MAP->number_of_maps) {
+                    win = true;
+                    ingame = start = false;
+                    return;
+                }
+                else {
+                    display_level();
+                    MAP->reset(level, SNAKE->body);
+                }
+            }
 
             Uint32 time_loop=SDL_GetTicks() - start_time;
             if(time_loop<(1000/FPS)) SDL_Delay( (1000/FPS)-time_loop );
@@ -72,16 +85,15 @@ void Game::input()
         }
         if(event.type == SDL_KEYDOWN) {
             switch(event.key.keysym.sym) {
-                case SDLK_DOWN: SNAKE->DIRECTION = Down; cout<<"down\n"; break;
-                case SDLK_s: SNAKE->DIRECTION = Down; cout<<"down\n"; break;
-                case SDLK_UP: SNAKE->DIRECTION = Up; cout<<"up\n"; break;
-                case SDLK_w: SNAKE->DIRECTION = Up; cout<<"up\n"; break;
-                case SDLK_LEFT: SNAKE->DIRECTION = Left; cout<<"left\n"; break;
-                case SDLK_a: SNAKE->DIRECTION = Left; cout<<"left\n"; break;
-                case SDLK_RIGHT: SNAKE->DIRECTION = Right; cout<<"right\n"; break;
-                case SDLK_d: SNAKE->DIRECTION = Right; cout<<"right\n"; break;
+                case SDLK_DOWN: SNAKE->DIRECTION = Down; break;
+                case SDLK_s: SNAKE->DIRECTION = Down; break;
+                case SDLK_UP: SNAKE->DIRECTION = Up; break;
+                case SDLK_w: SNAKE->DIRECTION = Up; break;
+                case SDLK_LEFT: SNAKE->DIRECTION = Left; break;
+                case SDLK_a: SNAKE->DIRECTION = Left; break;
+                case SDLK_RIGHT: SNAKE->DIRECTION = Right; break;
+                case SDLK_d: SNAKE->DIRECTION = Right; break;
                 case SDLK_ESCAPE: SNAKE->DIRECTION = Freeze; pause = true; cout<<"pause\n"; break;
-                case SDLK_SPACE: SNAKE->DIRECTION = Freeze; pause = true; cout<<"pause\n"; break;
                 default: break;
             }
         }
@@ -94,28 +106,9 @@ void Game::input()
     if(keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_S])SNAKE->DIRECTION = Down;
     if(keystates[SDL_SCANCODE_UP] || keystates[SDL_SCANCODE_W]) SNAKE->DIRECTION = Up;
 }
-void Game::update(int &level)
+void Game::update()
 {
-    pause = 0;
-
     MAP->create_Map(level);
-
-    if(SNAKE->eatFruit(MAP->fruit) ) {
-        MAP->getFruit(*SNAKE);
-    }
-
-    if(SNAKE->levelup()) {
-        if( (++level) == MAP->number_of_maps) {
-            win = true;
-            ingame = start = false;
-            return;
-        }
-        else {
-            display_level(level+1);
-            MAP->create_Map(level);
-            MAP->getFruit(*SNAKE);
-        }
-    }
 
     SNAKE->Move();
 
@@ -124,8 +117,12 @@ void Game::update(int &level)
         return;
     }
 
-    if(MAP->base_Array[MAP->fruit.y][MAP->fruit.x] == Wall) MAP->getFruit(*SNAKE);
-    MAP->base_Array[MAP->fruit.y][MAP->fruit.x] = Fruit;
+    if(SNAKE->eatFood(MAP->FRUIT->position, MAP->FRUIT->eaten, MAP->GIFT->position, MAP->GIFT->eaten, MAP->GIFT->start_time) ) {
+        MAP->getFood(SNAKE->body);
+    }
+
+    if(!MAP->GIFT->exist()) MAP->GIFT->position={18, 0};
+
     for(int i=0;i<SNAKE->body.size();i++) MAP->base_Array[SNAKE->body[i].y][SNAKE->body[i].x] = Snake;
     MAP->base_Array[SNAKE->body[0].y][SNAKE->body[0].x] = SnakeHEAD;
 }
@@ -144,13 +141,16 @@ void Game::render()
     SNAKE->render();
 
     MAP->display_score(SNAKE->score);
+
     SDL_RenderPresent(renderer);
 }
 
 void Game::reset()
 {
+    level = 0;
     SNAKE->reset();
-    MAP->getFruit(*SNAKE);
+    MAP->reset(level, SNAKE->body);
+    ingame = true;
     win = false;
 }
 
@@ -214,7 +214,6 @@ void Game::after_game()
 
     SDL_RenderPresent(renderer);
 
-    event.type=SDL_FIRSTEVENT;
     while(true)
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_QUIT) {
@@ -229,26 +228,25 @@ void Game::after_game()
         }
 }
 
-void Game::display_level(int const level)
+void Game::display_level()
 {
+    SDL_Color color = {24, 99, 0, 0};
+    SDL_Texture *lv=loadTexture_text("Level " + to_string(level+1), color, "Resource/Fonts/ALler/Aller_Bd.ttf", 70, renderer);
+    SDL_Point dst;
+    SDL_QueryTexture(lv, NULL, NULL, &dst.x, &dst.y);
+
     for(int i=0;i<50;i++) {
         int s=SDL_GetTicks();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
-
-        string tmp="Level " + to_string(level);
-        SDL_Color color = {24, 99, 0, 0};
-        SDL_Texture *lv=loadTexture_text(tmp, color, "Resource/Fonts/ALler/Aller_Bd.ttf", 70, renderer);
-        SDL_Point dst;
-        SDL_QueryTexture(lv, NULL, NULL, &dst.x, &dst.y);
         renderTexture(lv, renderer, (WIDTH_SCREEN-dst.x)/2, 300);
+
         SDL_RenderPresent(renderer);
 
-        event.type=SDL_FIRSTEVENT;
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_QUIT) {
-                running = ingame = false;
+                running = start = ingame = false;
                 return;
             }
         }
@@ -256,6 +254,9 @@ void Game::display_level(int const level)
         int time_loop=SDL_GetTicks() - s;
         if(time_loop<25) SDL_Delay(25-time_loop);
     }
+
+    SDL_DestroyTexture(lv);
+    lv=NULL;
 }
 
 
