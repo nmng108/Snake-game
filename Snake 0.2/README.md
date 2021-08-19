@@ -17,9 +17,13 @@ Project sử dụng IDE và các thư viện sau:
 ## Set up and lauch this game
 - Trên hệ điều hành Windows, truy cập Control Panel và theo đường dẫn sau: Control Panel\System and Security\System
 - Mở Advanced System Setting , chọn Environment Variable, trong ô System Variable tìm và ấn PATH rồi Edit...
-- Bấm New, chọn đường dẫn là thư mục SDL2 trong thư mục chứa project này
-- Tải MinGW(có sẵn nếu đã tải cùng IDE code::blocks), sau đó thêm đường dẫn tới folder bin bằng cách tương tự
- như trên và ấn Ok để hoàn tất
+- Bấm New, chọn đường dẫn là các thư mục sau: 
+    + ...\newgame\Snake 0.2\MinGW\bin
+    + ...\newgame\Snake 0.2\SDL2\SDL2_image-2.0.5\x86_64-w64-mingw32\bin
+    + ...\newgame\Snake 0.2\SDL2\SDL2-2.0.14\x86_64-w64-mingw32\bin
+    + ...\newgame\Snake 0.2\SDL2\SDL2_mixer-2.0.4\x86_64-w64-mingw32\bin
+    + ...\newgame\Snake 0.2\SDL2\SDL2_ttf-2.0.15\x86_64-w64-mingw32\bin
+
 - Mở Snake Game.exe để vào game
 
 ### Luật chơi
